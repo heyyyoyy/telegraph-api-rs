@@ -1,6 +1,10 @@
 mod account;
+mod page;
+
 
 pub use self::account::Account;
+pub use self::page::Page;
+
 
 use serde::Deserialize;
 

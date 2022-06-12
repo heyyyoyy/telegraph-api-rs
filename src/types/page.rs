@@ -1,7 +1,10 @@
 use serde::Deserialize;
 
+use super::node::Node;
+
+
 #[derive(Deserialize)]
-pub struct Page<T> {
+pub struct Page {
     path: String,
     url: String,
     title: String,
@@ -9,7 +12,7 @@ pub struct Page<T> {
     author_name: Option<String>,
     author_url: Option<String>,
     image_url: Option<String>,
-    content: Vec<T>,
+    content: Option<Vec<Node>>,
     views: u32,
     can_edit: Option<bool>
 }

@@ -12,7 +12,7 @@ pub struct Account {
 
 
 #[cfg(test)]
-mod account_type_testing {
+mod tests {
     use serde_json;
 
     use super::Account;

@@ -2,12 +2,12 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Default)]
 pub struct Account {
-    short_name: String,
-    author_name: String,
-    author_url: String,
-    access_token: Option<String>,
-    auth_url: Option<String>,
-    page_count: Option<i32>
+    pub short_name: String,
+    pub author_name: String,
+    pub author_url: String,
+    pub access_token: Option<String>,
+    pub auth_url: Option<String>,
+    pub page_count: Option<i32>
 }
 
 

@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Default)]
 pub struct PageViews {
-    views: u32
+    pub views: u32
 }
 
 

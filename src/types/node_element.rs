@@ -6,7 +6,7 @@ use super::node::Node;
 
 
 #[derive(Deserialize, PartialEq, Eq, Hash)]
-enum NodeElementAttr {
+pub enum NodeElementAttr {
     #[serde(alias = "href")]
     Href(String),
     #[serde(alias = "src")]
@@ -15,9 +15,9 @@ enum NodeElementAttr {
 
 #[derive(Deserialize, Default)]
 pub struct NodeElement {
-    tag: String,
-    attrs: Option<HashMap<NodeElementAttr, String>>,
-    children: Option<Vec<Node>>
+    pub tag: String,
+    pub attrs: Option<HashMap<NodeElementAttr, String>>,
+    pub children: Option<Vec<Node>>
 }
 
 
@@ -36,8 +36,8 @@ mod tests {
         }"#;
         let node_element: NodeElement = serde_json::from_str(page_views_str).unwrap_or_default();
         assert_eq!(node_element.tag, "p");
-        let node = node_element.children.unwrap_or_default().into_iter().nth(0);
 
+        let node = node_element.children.unwrap_or_default().into_iter().nth(0);
         let el = if let Some(Node::String(el)) = node {
             el
         } else {

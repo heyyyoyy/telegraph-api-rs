@@ -5,6 +5,6 @@ use super::page::Page;
 
 #[derive(Deserialize)]
 pub struct PageList {
-    total_count: u32,
-    pages: Vec<Page>
+    pub total_count: u32,
+    pub pages: Vec<Page>
 }

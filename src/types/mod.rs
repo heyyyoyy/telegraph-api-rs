@@ -17,8 +17,8 @@ pub use self::page_views::PageViews;
 use serde::Deserialize;
 
 
-#[derive(Deserialize)]
-struct TelegraphResult<T> {
-    ok: bool,
-    result: Option<T>,
+#[derive(Deserialize, Debug)]
+pub struct TelegraphResult<T> {
+    pub ok: bool,
+    pub result: Option<T>,
 }

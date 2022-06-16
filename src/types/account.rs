@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct Account {
     pub short_name: String,
     pub author_name: String,

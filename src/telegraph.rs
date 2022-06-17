@@ -37,11 +37,13 @@ impl Telegraph {
         Telegraph::default()
     }
 
-    pub fn create_account(&self, short_name: &str, author_name: Option<&str>, author_url: Option<&str>) -> Result<Account, Error>{
+    pub fn create_account<'a, T, D>(&self, short_name: &'a str, author_name: T, author_url: D) -> Result<Account, Error>
+    where T: Into<Option<&'a str>>, D: Into<Option<&'a str>>
+    {
         let params = HashMap::from([
             ("short_name", short_name),
-            ("author_name", author_name.unwrap_or_default()),
-            ("author_url", author_url.unwrap_or_default()),
+            ("author_name", author_name.into().unwrap_or_default()),
+            ("author_url", author_url.into().unwrap_or_default()),
         ]);
         let req = self.client.post(self.method_name.create_account).form(&params).send()?;
         let json: TelegraphResult<Account> = req.json()?;

@@ -9,9 +9,9 @@ pub enum AccountField {
 }
 
 
-impl AccountField {
-    pub fn value(&self) -> &str {
-        match *self {
+impl Into<&'static str> for AccountField {
+    fn into(self) -> &'static str {
+        match self {
             AccountField::ShortName => "short_name",
             AccountField::AuthorName => "author_name",
             AccountField::AuthorUrl => "author_url",

@@ -1,5 +1,27 @@
 use serde::Deserialize;
 
+pub enum AccountField {
+    ShortName,
+    AuthorName,
+    AuthorUrl,
+    AuthUrl,
+    PageCount
+}
+
+
+impl AccountField {
+    pub fn value(&self) -> &str {
+        match *self {
+            AccountField::ShortName => "short_name",
+            AccountField::AuthorName => "author_name",
+            AccountField::AuthorUrl => "author_url",
+            AccountField::AuthUrl => "auth_url",
+            AccountField::PageCount => "page_count",
+        }
+    }
+}
+
+
 #[derive(Deserialize, Default, Debug)]
 pub struct Account {
     pub short_name: String,

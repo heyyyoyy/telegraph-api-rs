@@ -6,7 +6,7 @@ mod page_list;
 mod page_views;
 
 
-pub use self::account::Account;
+pub use self::account::{Account, AccountField};
 pub use self::page::Page;
 pub use self::node::Node;
 pub use self::node_element::NodeElement;

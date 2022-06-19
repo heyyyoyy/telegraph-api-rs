@@ -2,18 +2,21 @@ use std::collections::HashMap;
 use reqwest::{blocking::Client, Error};
 
 use crate::types::{TelegraphResult, Account, AccountField};
+use crate::requests::CreateAccount;
 
 
 struct MethodName {
     create_account: &'static str,
-    edit_account_info: &'static str
+    edit_account_info: &'static str,
+    get_account_info: &'static str
 }
 
 impl Default for MethodName{
     fn default() -> Self {
         MethodName {
             create_account: "https://api.telegra.ph/createAccount",
-            edit_account_info: "https://api.telegra.ph/editAccountInfo"
+            edit_account_info: "https://api.telegra.ph/editAccountInfo",
+            get_account_info: "https://api.telegra.ph/getAccountInfo"
         }
     }
 }
@@ -39,17 +42,17 @@ impl Telegraph {
         Telegraph::default()
     }
 
-    pub fn create_account<'a>(
-        &self, short_name: &'a str,
-        author_name: impl Into<Option<&'a str>>,
-        author_url: impl Into<Option<&'a str>>
+    pub fn create_account<'create_account>(
+        &self, short_name: &'create_account str,
+        author_name: impl Into<Option<&'create_account str>>,
+        author_url: impl Into<Option<&'create_account str>>
     ) -> Result<Account, Error>
     {
-        let params: HashMap<&str, &str> = HashMap::from([
-            (AccountField::ShortName.into(), short_name),
-            (AccountField::AuthorName.into(), author_name.into().unwrap_or_default()),
-            (AccountField::AuthorUrl.into(), author_url.into().unwrap_or_default()),
-        ]);
+        let params = CreateAccount::new(
+            short_name, 
+            author_name, 
+            author_url
+        );
         let req = self.client.post(self.method_name.create_account).form(&params).send()?;
         let json: TelegraphResult<Account> = req.json()?;
         // TODO: Handle error if ok false or result None

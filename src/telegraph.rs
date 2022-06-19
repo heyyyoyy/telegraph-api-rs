@@ -1,7 +1,7 @@
 use reqwest::{blocking::Client, Error};
 
-use crate::types::{TelegraphResult, Account};
-use crate::requests::{CreateAccount, EditAccountinfo};
+use crate::types::{TelegraphResult, Account, AccountField};
+use crate::requests::{CreateAccount, EditAccountinfo, GetAccountInfo};
 
 
 struct MethodName {
@@ -70,6 +70,23 @@ impl Telegraph {
             access_token, short_name, author_name, author_url
         );
         let req = self.client.post(self.method_name.edit_account_info).form(&params).send()?;
+        let json: TelegraphResult<Account> = req.json()?;
+        // TODO: Handle error if ok false or result None
+        Ok(json.result.unwrap_or_default())
+    }
+
+    pub fn get_account_info<'get_account_info>(
+        &self,
+        access_token: &'get_account_info str,
+        fields: impl Into<Option<Vec<AccountField>>>
+    ) -> Result<Account, Error>
+    {
+        let params = GetAccountInfo::new(
+            access_token,
+            fields
+        );
+        let b = self.client.post(self.method_name.get_account_info).form(&params);
+        let req = b.send()?;
         let json: TelegraphResult<Account> = req.json()?;
         // TODO: Handle error if ok false or result None
         Ok(json.result.unwrap_or_default())

@@ -1,8 +1,7 @@
-use std::collections::HashMap;
 use reqwest::{blocking::Client, Error};
 
-use crate::types::{TelegraphResult, Account, AccountField};
-use crate::requests::CreateAccount;
+use crate::types::{TelegraphResult, Account};
+use crate::requests::{CreateAccount, EditAccountinfo};
 
 
 struct MethodName {
@@ -59,25 +58,17 @@ impl Telegraph {
         Ok(json.result.unwrap_or_default())
     }
 
-    pub fn edit_account_info<'a>(
+    pub fn edit_account_info<'edit_account>(
         &self,
-        access_token: &'a str,
-        short_name: impl Into<Option<&'a str>>,
-        author_name: impl Into<Option<&'a str>>,
-        author_url: impl Into<Option<&'a str>>
+        access_token: &'edit_account str,
+        short_name: impl Into<Option<&'edit_account str>>,
+        author_name: impl Into<Option<&'edit_account str>>,
+        author_url: impl Into<Option<&'edit_account str>>
     ) -> Result<Account, Error> 
     {
-        let mut params: HashMap<&str, &str> = HashMap::new();
-        params.insert("access_token", access_token);
-        if let Some(val) = short_name.into() {
-            params.insert(AccountField::ShortName.into(), val);
-        };
-        if let Some(val) = author_name.into() {
-            params.insert(AccountField::AuthorName.into(), val);
-        };
-        if let Some(val) = author_url.into() {
-            params.insert(AccountField::AuthorUrl.into(), val);
-        };
+        let params = EditAccountinfo::new(
+            access_token, short_name, author_name, author_url
+        );
         let req = self.client.post(self.method_name.edit_account_info).form(&params).send()?;
         let json: TelegraphResult<Account> = req.json()?;
         // TODO: Handle error if ok false or result None

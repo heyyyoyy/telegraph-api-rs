@@ -8,8 +8,8 @@ pub struct CreateAccount {
 }
 
 
-impl<'create_account> CreateAccount {
-    pub fn new(
+impl CreateAccount {
+    pub fn new<'create_account>(
         short_name: &'create_account str,
         author_name: impl Into<Option<&'create_account str>>,
         author_url: impl Into<Option<&'create_account str>>

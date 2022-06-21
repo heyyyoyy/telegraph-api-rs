@@ -3,7 +3,7 @@ use serde::Deserialize;
 use super::node::Node;
 
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct Page {
     pub path: String,
     pub url: String,

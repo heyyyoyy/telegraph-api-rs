@@ -1,7 +1,7 @@
 use reqwest::{blocking::Client, Error};
 
 use crate::types::{TelegraphResult, Account, AccountField};
-use crate::requests::{CreateAccount, EditAccountinfo, GetAccountInfo};
+use crate::requests::{CreateAccount, EditAccountinfo, GetAccountInfo, CreatePage};
 
 
 struct MethodName {
@@ -90,5 +90,9 @@ impl Telegraph {
         let json: TelegraphResult<Account> = req.json()?;
         // TODO: Handle error if ok false or result None
         Ok(json.result.unwrap_or_default())
+    }
+
+    pub fn create_page(&self) -> CreatePage {
+        CreatePage::default()
     }
 }

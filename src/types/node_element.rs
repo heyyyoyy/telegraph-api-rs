@@ -1,15 +1,15 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use super::node::Node;
 
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Serialize, Default, Debug)]
 pub struct NodeElementAttr {
     pub href: Option<String>,
     pub src: Option<String>
 }
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Serialize, Default, Debug)]
 pub struct NodeElement {
     pub tag: String,
     pub attrs: Option<NodeElementAttr>,

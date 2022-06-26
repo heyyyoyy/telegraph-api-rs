@@ -93,6 +93,6 @@ impl Telegraph {
     }
 
     pub fn create_page(&self) -> CreatePage {
-        CreatePage::default()
+        CreatePage::new(&self.client, "https://api.telegra.ph/createPage")
     }
 }

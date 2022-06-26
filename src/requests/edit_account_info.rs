@@ -1,7 +1,10 @@
+use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-#[derive(Serialize)]
-pub struct EditAccountinfo {
+use crate::types::{Account, TelegraphResult};
+
+#[derive(Default, Serialize)]
+struct EditAccountinfoInner {
     access_token: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     short_name: Option<String>,
@@ -11,19 +14,42 @@ pub struct EditAccountinfo {
     author_url: Option<String>
 }
 
-impl EditAccountinfo {
-    pub fn new<'edit_account>(
-        access_token: &'edit_account str,
-        short_name: impl Into<Option<&'edit_account str>>,
-        author_name: impl Into<Option<&'edit_account str>>,
-        author_url: impl Into<Option<&'edit_account str>>
-    ) -> Self 
-    {
-        EditAccountinfo {
-            access_token: access_token.into(),
-            short_name: if let Some(val) = short_name.into() {Some(val.to_string())} else {None},
-            author_name: if let Some(val) = author_name.into() {Some(val.to_string())} else {None}, 
-            author_url: if let Some(val) = author_url.into() {Some(val.to_string())} else {None}
-        }
+pub struct EditAccountInfo<'client> {
+    client: &'client Client,
+    method_name: &'static str,
+    inner: EditAccountinfoInner
+}
+
+
+impl<'client> EditAccountInfo<'client> {
+    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
+        EditAccountInfo { client, method_name, inner: EditAccountinfoInner::default() }
+    }
+
+    pub fn access_token(&mut self, access_token: &str) -> &mut Self {
+        self.inner.access_token = access_token.into();
+        self
+    }
+
+    pub fn short_name(&mut self, short_name: &str) -> &mut Self {
+        self.inner.short_name = Some(short_name.into());
+        self
+    }
+
+    pub fn author_name(&mut self, author_name: &str) -> &mut Self {
+        self.inner.author_name = Some(author_name.into());
+        self
+    }
+
+    pub fn author_url(&mut self, author_url: &str) -> &mut Self {
+        self.inner.author_url = Some(author_url.into());
+        self
+    }
+
+    // TODO: use trait for send request
+    pub fn send(&self) -> Result<Account, Error> {
+        let req = Client::new().post(self.method_name).form(&self.inner).send()?;
+        let json: TelegraphResult<Account> = req.json()?;
+        Ok(json.result.unwrap_or_default())
     }
 }

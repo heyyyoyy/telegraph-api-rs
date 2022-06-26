@@ -1,7 +1,7 @@
 use reqwest::{blocking::Client, Error};
 
 use crate::types::{TelegraphResult, Account, AccountField};
-use crate::requests::{CreateAccount, EditAccountinfo, GetAccountInfo, CreatePage};
+use crate::requests::{CreateAccount, EditAccountInfo, GetAccountInfo, CreatePage};
 
 
 struct MethodName {
@@ -45,21 +45,9 @@ impl Telegraph {
         CreateAccount::new(&self.client, "https://api.telegra.ph/createAccount")
     }
 
-    pub fn edit_account_info<'edit_account>(
-        &self,
-        access_token: &'edit_account str,
-        short_name: impl Into<Option<&'edit_account str>>,
-        author_name: impl Into<Option<&'edit_account str>>,
-        author_url: impl Into<Option<&'edit_account str>>
-    ) -> Result<Account, Error> 
+    pub fn edit_account_info(&self) -> EditAccountInfo 
     {
-        let params = EditAccountinfo::new(
-            access_token, short_name, author_name, author_url
-        );
-        let req = self.client.post(self.method_name.edit_account_info).form(&params).send()?;
-        let json: TelegraphResult<Account> = req.json()?;
-        // TODO: Handle error if ok false or result None
-        Ok(json.result.unwrap_or_default())
+        EditAccountInfo::new(&self.client, "https://api.telegra.ph/editAccountInfo")
     }
 
     pub fn get_account_info<'get_account_info>(

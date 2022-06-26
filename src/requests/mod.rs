@@ -4,6 +4,6 @@ mod get_account_info;
 mod create_page;
 
 pub use create_account::CreateAccount;
-pub use edit_account_info::EditAccountinfo;
+pub use edit_account_info::EditAccountInfo;
 pub use get_account_info::GetAccountInfo;
 pub use create_page::CreatePage;

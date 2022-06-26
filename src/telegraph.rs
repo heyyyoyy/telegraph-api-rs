@@ -41,21 +41,8 @@ impl Telegraph {
         Telegraph::default()
     }
 
-    pub fn create_account<'create_account>(
-        &self, short_name: &'create_account str,
-        author_name: impl Into<Option<&'create_account str>>,
-        author_url: impl Into<Option<&'create_account str>>
-    ) -> Result<Account, Error>
-    {
-        let params = CreateAccount::new(
-            short_name, 
-            author_name, 
-            author_url
-        );
-        let req = self.client.post(self.method_name.create_account).form(&params).send()?;
-        let json: TelegraphResult<Account> = req.json()?;
-        // TODO: Handle error if ok false or result None
-        Ok(json.result.unwrap_or_default())
+    pub fn create_account(&self) -> CreateAccount {
+        CreateAccount::new(&self.client, "https://api.telegra.ph/createAccount")
     }
 
     pub fn edit_account_info<'edit_account>(

@@ -29,7 +29,7 @@ impl<'client> RevokeAccessToken<'client> {
 
     // TODO: use trait for send request
     pub fn send(&self) -> Result<Account, Error> {
-        let req = Client::new().post(self.method_name).form(&self.inner).send()?;
+        let req = self.client.post(self.method_name).form(&self.inner).send()?;
         let json: TelegraphResult<Account> = req.json()?;
         Ok(json.result.unwrap_or_default())
     }

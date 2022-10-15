@@ -54,6 +54,10 @@ impl<'client> CreatePage<'client> {
         self
     }
 
+    pub fn build_content(content: &str) -> Result<Vec<Node>, serde_json::Error> {
+        serde_json::from_str(content)
+    }
+
     pub fn content(&mut self, content: Vec<Node>) -> &mut Self {
         self.inner.content = content;
         self
@@ -76,7 +80,7 @@ impl<'client> CreatePage<'client> {
 
     // TODO: use trait for send request
     pub fn send(&self) -> Result<Page, Error> {
-        let req = Client::new().post(self.method_name).form(&self.inner).send()?;
+        let req = self.client.post(self.method_name).form(&self.inner).send()?;
         let json: TelegraphResult<Page> = req.json()?;
         Ok(json.result.unwrap_or_default())
     }

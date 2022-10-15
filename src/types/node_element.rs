@@ -3,10 +3,14 @@ use serde::{Deserialize, Serialize};
 use super::node::Node;
 
 
-#[derive(Deserialize, Serialize, Default, Debug)]
-pub struct NodeElementAttr {
-    pub href: Option<String>,
-    pub src: Option<String>
+#[derive(Deserialize, Serialize, Debug)]
+pub enum NodeElementAttr {
+    #[serde(rename = "id")]
+    ID(String),
+    #[serde(rename = "href")]
+    HREF(String),
+    #[serde(rename = "src")]
+    SRC(String)
 }
 
 #[derive(Deserialize, Serialize, Default, Debug)]
@@ -21,7 +25,7 @@ pub struct NodeElement {
 mod tests {
     use serde_json;
 
-    use super::{NodeElement, Node};
+    use super::{NodeElement, Node, NodeElementAttr};
 
     #[test]
     fn node_elements_deserialize() {
@@ -51,7 +55,12 @@ mod tests {
             "attrs": {"href": "link1"}
         }"#;
         let node_element: NodeElement = serde_json::from_str(node_el_str).unwrap_or_default();
-    
-        assert_eq!(node_element.attrs.unwrap_or_default().href.unwrap_or_default(), "link1"); 
+        let node_attr_element = if let Some(NodeElementAttr::HREF(el)) = node_element.attrs {
+            el
+        } else {
+            "".into()
+        };
+
+        assert_eq!(node_attr_element, "link1"); 
     }
 }

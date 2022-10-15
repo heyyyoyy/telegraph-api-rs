@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct PageViews {
     pub views: u32
 }

@@ -7,6 +7,7 @@ mod create_page;
 mod edit_page;
 mod get_page;
 mod get_page_list;
+mod get_views;
 
 pub use create_account::CreateAccount;
 pub use edit_account_info::EditAccountInfo;
@@ -17,3 +18,4 @@ pub use create_page::CreatePage;
 pub use edit_page::EditPage;
 pub use get_page::GetPage;
 pub use get_page_list::GetPageList;
+pub use get_views::GetViews;

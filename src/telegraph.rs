@@ -3,7 +3,7 @@ use reqwest::blocking::Client;
 use crate::requests::{
     CreateAccount, EditAccountInfo, GetAccountInfo, 
     CreatePage, RevokeAccessToken, EditPage, GetPage,
-    GetPageList
+    GetPageList, GetViews
 };
 
 
@@ -75,5 +75,9 @@ impl Telegraph {
 
     pub fn get_page_list(&self) -> GetPageList {
         GetPageList::new(&self.client, "https://api.telegra.ph/getPageList")
+    }
+
+    pub fn get_views(&self) -> GetViews {
+        GetViews::new(&self.client, "https://api.telegra.ph/getViews")
     }
 }

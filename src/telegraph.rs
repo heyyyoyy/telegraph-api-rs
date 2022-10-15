@@ -1,6 +1,9 @@
 use reqwest::blocking::Client;
 
-use crate::requests::{CreateAccount, EditAccountInfo, GetAccountInfo, CreatePage, RevokeAccessToken};
+use crate::requests::{
+    CreateAccount, EditAccountInfo, GetAccountInfo, 
+    CreatePage, RevokeAccessToken, EditPage
+};
 
 
 struct MethodName {
@@ -59,5 +62,9 @@ impl Telegraph {
 
     pub fn create_page(&self) -> CreatePage {
         CreatePage::new(&self.client, "https://api.telegra.ph/createPage")
+    }
+
+    pub fn edit_page(&self) -> EditPage {
+        EditPage::new(&self.client, "https://api.telegra.ph/editPage")
     }
 }

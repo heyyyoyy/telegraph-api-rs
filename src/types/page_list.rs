@@ -3,7 +3,7 @@ use serde::Deserialize;
 use super::page::Page;
 
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct PageList {
     pub total_count: u32,
     pub pages: Vec<Page>

@@ -1,26 +1,20 @@
+use reqwest::{blocking::Client, Error};
 use serde::{Serialize, Serializer};
-use serde::ser::Error;
-use serde_json;
+use serde::ser;
 
-use crate::types::AccountField;
+
+use crate::types::{AccountField, TelegraphResult, Account};
+
 
 #[derive(Serialize)]
-pub struct GetAccountInfo {
+struct GetAccountInfoInner {
     access_token: String,
-    #[serde(serialize_with = "GetAccountInfo::serialize")]
+    #[serde(serialize_with = "GetAccountInfoInner::serialize")]
     fields: Option<Vec<AccountField>>
 }
 
-impl GetAccountInfo {
-    pub fn new<'get_account_info>(
-        access_token: &'get_account_info str,
-        fields: impl Into<Option<Vec<AccountField>>>
-    ) -> Self {
-        GetAccountInfo {
-            access_token: access_token.into(),
-            fields: fields.into()
-        }
-    }
+
+impl GetAccountInfoInner {
     fn serialize<T: Serialize, S: Serializer>(
         value: &T,
         serializer: S,
@@ -28,26 +22,48 @@ impl GetAccountInfo {
     {
         match serde_json::to_string(value) {
             Ok(json) => serializer.serialize_str(&json),
-            Err(_) => Err(Error::custom("Failed to serialize value to json")),
+            Err(_) => Err(ser::Error::custom("Failed to serialize value to json")),
         }
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use serde_urlencoded;
 
-    use super::*;
+impl Default for GetAccountInfoInner {
+    fn default() -> Self {
+        Self { 
+            access_token: "".into(), 
+            fields: vec![AccountField::ShortName, AccountField::AuthorName, AccountField::AuthorUrl].into() 
+        }
+    }
+}
 
-    #[test]
-    fn serialize_get_account_info() {
-        let params = GetAccountInfo::new(
-            "qwerty",
-            vec![AccountField::ShortName, AccountField::AuthorName]
-        );
-        let query = "access_token=qwerty&fields=%5B%22short_name%22%2C%22author_name%22%5D";
 
-        let json = serde_urlencoded::to_string(&params);
-        assert_eq!(query, json.unwrap_or("".to_string()));
+pub struct GetAccountInfo<'client> {
+    client: &'client Client,
+    method_name: &'static str,
+    inner: GetAccountInfoInner
+}
+
+
+impl<'client> GetAccountInfo<'client> {
+    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
+        GetAccountInfo { client, method_name, inner: GetAccountInfoInner::default() }
+    }
+
+    pub fn access_token(&mut self, access_token: &str) -> &mut Self {
+        self.inner.access_token = access_token.into();
+        self
+    }
+
+    pub fn fields(&mut self, fields: Vec<AccountField>) -> &mut Self {
+        self.inner.fields = fields.into();
+        self
+    }
+
+    // TODO: use trait for send request
+    pub fn send(&self) -> Result<Account, Error> {
+        let req = Client::new().post(self.method_name).form(&self.inner).send()?;
+        let json: TelegraphResult<Account> = req.json()?;
+        Ok(json.result.unwrap_or_default())
     }
 }

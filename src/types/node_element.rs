@@ -8,9 +8,9 @@ pub enum NodeElementAttr {
     #[serde(rename = "id")]
     ID(String),
     #[serde(rename = "href")]
-    HREF(String),
+    Href(String),
     #[serde(rename = "src")]
-    SRC(String)
+    Src(String)
 }
 
 #[derive(Deserialize, Serialize, Default, Debug)]
@@ -55,7 +55,7 @@ mod tests {
             "attrs": {"href": "link1"}
         }"#;
         let node_element: NodeElement = serde_json::from_str(node_el_str).unwrap_or_default();
-        let node_attr_element = if let Some(NodeElementAttr::HREF(el)) = node_element.attrs {
+        let node_attr_element = if let Some(NodeElementAttr::Href(el)) = node_element.attrs {
             el
         } else {
             "".into()

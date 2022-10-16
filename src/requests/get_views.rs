@@ -1,11 +1,18 @@
+use std::rc::Rc;
+
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::types::{TelegraphResult, PageViews};
+use crate::{types::{TelegraphResult, PageViews}, ApiMethod};
 
 
-#[derive(Default, Serialize)]
-struct GetViewsInner {
+#[derive(Serialize)]
+pub struct GetViews {
+    #[serde(skip)]
+    client: Rc<Client>,
+    #[serde(skip)]
+    method_name: Rc<String>,
+
     path: String,
     year: i32,
     month: i32,
@@ -13,47 +20,52 @@ struct GetViewsInner {
     hour: i32
 }
 
+impl ApiMethod for GetViews {
+    type FunctionBulder = GetViews;
+    type Response = PageViews;
 
-pub struct GetViews<'client> {
-    client: &'client Client,
-    method_name: &'static str,
-    inner: GetViewsInner
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
+        Self::FunctionBulder { 
+            client, 
+            method_name,
+            path: "".to_string(),
+            year: 2000,
+            month: 1,
+            day: 1,
+            hour: 0 
+        }
+    }
+    fn send(&self) -> Result<Self::Response, Error> {
+        let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
+        let json: TelegraphResult<Self::Response> = req.json()?;
+        Ok(json.result.unwrap_or_default())
+    }
 }
 
-impl<'client> GetViews<'client> {
-    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
-        GetViews { client, method_name, inner: GetViewsInner::default() }
-    }
 
+impl GetViews {
     pub fn path(&mut self, path: &str) -> &mut Self {
-        self.inner.path = path.into();
+        self.path = path.into();
         self
     }
 
     pub fn year(&mut self, year: i32) -> &mut Self {
-        self.inner.year = year;
+        self.year = year;
         self
     }
 
     pub fn month(&mut self, month: i32) -> &mut Self {
-        self.inner.month = month;
+        self.month = month;
         self
     }
 
     pub fn day(&mut self, day: i32) -> &mut Self {
-        self.inner.day = day;
+        self.day = day;
         self
     }
 
     pub fn hour(&mut self, hour: i32) -> &mut Self {
-        self.inner.hour = hour;
+        self.hour = hour;
         self
-    }
-
-    // TODO: use trait for send request
-    pub fn send(&self) -> Result<PageViews, Error> {
-        let req = self.client.post(self.method_name).form(&self.inner).send()?;
-        let json: TelegraphResult<PageViews> = req.json()?;
-        Ok(json.result.unwrap_or_default())
     }
 }

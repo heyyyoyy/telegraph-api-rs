@@ -1,10 +1,18 @@
+use std::rc::Rc;
+
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::types::{Account, TelegraphResult};
+use crate::{types::{Account, TelegraphResult}, ApiMethod};
+
 
 #[derive(Default, Serialize)]
-struct EditAccountinfoInner {
+pub struct EditAccountInfo {
+    #[serde(skip)]
+    client: Rc<Client>,
+    #[serde(skip)]
+    method_name: Rc<String>,
+
     access_token: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     short_name: Option<String>,
@@ -14,42 +22,40 @@ struct EditAccountinfoInner {
     author_url: Option<String>
 }
 
-pub struct EditAccountInfo<'client> {
-    client: &'client Client,
-    method_name: &'static str,
-    inner: EditAccountinfoInner
+
+impl ApiMethod for EditAccountInfo {
+    type FunctionBulder = EditAccountInfo;
+    type Response = Account;
+
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
+        Self::FunctionBulder { client, method_name, ..Self::default() }
+    }
+    fn send(&self) -> Result<Self::Response, Error> {
+        let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
+        let json: TelegraphResult<Self::Response> = req.json()?;
+        Ok(json.result.unwrap_or_default())
+    }
 }
 
 
-impl<'client> EditAccountInfo<'client> {
-    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
-        EditAccountInfo { client, method_name, inner: EditAccountinfoInner::default() }
-    }
-
+impl EditAccountInfo {
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
-        self.inner.access_token = access_token.into();
+        self.access_token = access_token.into();
         self
     }
 
     pub fn short_name(&mut self, short_name: &str) -> &mut Self {
-        self.inner.short_name = Some(short_name.into());
+        self.short_name = Some(short_name.into());
         self
     }
 
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
-        self.inner.author_name = Some(author_name.into());
+        self.author_name = Some(author_name.into());
         self
     }
 
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
-        self.inner.author_url = Some(author_url.into());
+        self.author_url = Some(author_url.into());
         self
-    }
-
-    // TODO: use trait for send request
-    pub fn send(&self) -> Result<Account, Error> {
-        let req = self.client.post(self.method_name).form(&self.inner).send()?;
-        let json: TelegraphResult<Account> = req.json()?;
-        Ok(json.result.unwrap_or_default())
     }
 }

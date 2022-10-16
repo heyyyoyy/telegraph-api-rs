@@ -1,36 +1,40 @@
+use std::rc::Rc;
+
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::types::{Account, TelegraphResult};
+use crate::{types::{Account, TelegraphResult}, ApiMethod};
 
 
 #[derive(Default, Serialize)]
-struct RevokeAccessTokenInner {
+pub struct RevokeAccessToken {
+    #[serde(skip)]
+    client: Rc<Client>,
+    #[serde(skip)]
+    method_name: Rc<String>,
+
     access_token: String
 }
 
 
-pub struct RevokeAccessToken<'client> {
-    client: &'client Client,
-    method_name: &'static str,
-    inner: RevokeAccessTokenInner
+impl ApiMethod for RevokeAccessToken {
+    type FunctionBulder = RevokeAccessToken;
+    type Response = Account;
+
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
+        Self::FunctionBulder { client, method_name, ..Self::default() }
+    }
+    fn send(&self) -> Result<Self::Response, Error> {
+        let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
+        let json: TelegraphResult<Self::Response> = req.json()?;
+        Ok(json.result.unwrap_or_default())
+    }
 }
 
 
-impl<'client> RevokeAccessToken<'client> {
-    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
-        RevokeAccessToken { client, method_name, inner: RevokeAccessTokenInner::default() }
-    }
-
+impl RevokeAccessToken {
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
-        self.inner.access_token = access_token.into();
+        self.access_token = access_token.into();
         self
-    }
-
-    // TODO: use trait for send request
-    pub fn send(&self) -> Result<Account, Error> {
-        let req = self.client.post(self.method_name).form(&self.inner).send()?;
-        let json: TelegraphResult<Account> = req.json()?;
-        Ok(json.result.unwrap_or_default())
     }
 }

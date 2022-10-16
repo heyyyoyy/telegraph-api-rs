@@ -1,20 +1,28 @@
+use std::rc::Rc;
+
 use reqwest::{blocking::Client, Error};
 use serde::{Serialize, Serializer};
 use serde::ser;
 
 
+use crate::ApiMethod;
 use crate::types::{AccountField, TelegraphResult, Account};
 
 
 #[derive(Serialize)]
-struct GetAccountInfoInner {
+pub struct GetAccountInfo {
+    #[serde(skip)]
+    client: Rc<Client>,
+    #[serde(skip)]
+    method_name: Rc<String>,
+
     access_token: String,
-    #[serde(serialize_with = "GetAccountInfoInner::serialize")]
+    #[serde(serialize_with = "GetAccountInfo::serialize")]
     fields: Option<Vec<AccountField>>
 }
 
 
-impl GetAccountInfoInner {
+impl GetAccountInfo {
     fn serialize<T: Serialize, S: Serializer>(
         value: &T,
         serializer: S,
@@ -28,42 +36,35 @@ impl GetAccountInfoInner {
 }
 
 
-impl Default for GetAccountInfoInner {
-    fn default() -> Self {
-        Self { 
+impl ApiMethod for GetAccountInfo {
+    type FunctionBulder = GetAccountInfo;
+    type Response = Account;
+
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
+        Self::FunctionBulder { 
+            client, 
+            method_name, 
             access_token: "".into(), 
-            fields: vec![AccountField::ShortName, AccountField::AuthorName, AccountField::AuthorUrl].into() 
-        }
+            fields: vec![AccountField::ShortName, AccountField::AuthorName, AccountField::AuthorUrl].into()}
+    }
+    fn send(&self) -> Result<Self::Response, Error> {
+        let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
+        let json: TelegraphResult<Self::Response> = req.json()?;
+        Ok(json.result.unwrap_or_default())
     }
 }
 
 
-pub struct GetAccountInfo<'client> {
-    client: &'client Client,
-    method_name: &'static str,
-    inner: GetAccountInfoInner
-}
 
 
-impl<'client> GetAccountInfo<'client> {
-    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
-        GetAccountInfo { client, method_name, inner: GetAccountInfoInner::default() }
-    }
-
+impl GetAccountInfo {
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
-        self.inner.access_token = access_token.into();
+        self.access_token = access_token.into();
         self
     }
 
     pub fn fields(&mut self, fields: Vec<AccountField>) -> &mut Self {
-        self.inner.fields = fields.into();
+        self.fields = fields.into();
         self
-    }
-
-    // TODO: use trait for send request
-    pub fn send(&self) -> Result<Account, Error> {
-        let req = self.client.post(self.method_name).form(&self.inner).send()?;
-        let json: TelegraphResult<Account> = req.json()?;
-        Ok(json.result.unwrap_or_default())
     }
 }

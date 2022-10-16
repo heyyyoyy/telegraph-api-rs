@@ -1,43 +1,46 @@
+use std::rc::Rc;
+
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
 use crate::types::{Page, TelegraphResult};
-
+use crate::ApiMethod;
 
 
 #[derive(Default, Serialize)]
-struct GetPageInner {
+pub struct GetPage {
+    #[serde(skip)]
+    client: Rc<Client>,
+    #[serde(skip)]
+    method_name: Rc<String>,
+
     path: String,
     return_content: bool
 }
 
+impl ApiMethod for GetPage {
+    type FunctionBulder = GetPage;
+    type Response = Page;
 
-pub struct GetPage<'client> {
-    client: &'client Client,
-    method_name: &'static str,
-    inner: GetPageInner
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
+        Self::FunctionBulder { client, method_name, ..Self::default() }
+    }
+    fn send(&self) -> Result<Self::Response, Error> {
+        let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
+        let json: TelegraphResult<Self::Response> = req.json()?;
+        Ok(json.result.unwrap_or_default())
+    }
 }
 
 
-impl<'client> GetPage<'client> {
-    pub fn new(client: &'client Client, method_name: &'static str) -> Self {
-        GetPage { client, method_name, inner: GetPageInner::default() }
-    }
-
+impl GetPage {
     pub fn path(&mut self, path: &str) -> &mut Self {
-        self.inner.path = path.into();
+        self.path = path.into();
         self
     }
 
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
-        self.inner.return_content = return_content;
+        self.return_content = return_content;
         self
-    }
-
-    // TODO: use trait for send request
-    pub fn send(&self) -> Result<Page, Error> {
-        let req = self.client.post(self.method_name).form(&self.inner).send()?;
-        let json: TelegraphResult<Page> = req.json()?;
-        Ok(json.result.unwrap_or_default())
     }
 }

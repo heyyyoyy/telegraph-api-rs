@@ -73,10 +73,6 @@ impl EditPage {
         self
     }
 
-    pub fn build_content(content: &str) -> Result<Vec<Node>, serde_json::Error> {
-        serde_json::from_str(content)
-    }
-
     pub fn content(&mut self, content: Vec<Node>) -> &mut Self {
         self.content = content;
         self

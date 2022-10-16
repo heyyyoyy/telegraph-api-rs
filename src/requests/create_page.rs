@@ -1,11 +1,9 @@
 use std::rc::Rc;
 
 use reqwest::{blocking::Client, Error};
-use serde::{Serialize, Serializer};
-use serde::ser;
-use serde_json;
+use serde::Serialize;
 
-use crate::ApiMethod;
+use crate::requests::{ApiMethod, ApiFieldSerializer};
 use crate::types::{Node, Page, TelegraphResult};
 
 
@@ -18,7 +16,7 @@ pub struct CreatePage {
 
     access_token: String,
     title: String,
-    #[serde(serialize_with = "CreatePage::serialize")]
+    #[serde(serialize_with = "ApiFieldSerializer::serialize")]
     content: Vec<Node>,
     author_name: Option<String>,
     author_url: Option<String>,
@@ -37,21 +35,6 @@ impl ApiMethod for CreatePage {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
         let json: TelegraphResult<Self::Response> = req.json()?;
         Ok(json.result.unwrap_or_default())
-    }
-}
-
-
-impl CreatePage {
-    // TODO: use trait with custom serialization to encode url 
-    fn serialize<T: Serialize, S: Serializer>(
-        value: &T,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    {
-        match serde_json::to_string(value) {
-            Ok(json) => serializer.serialize_str(&json),
-            Err(_) => Err(ser::Error::custom("Failed to serialize value to json")),
-        }
     }
 }
 

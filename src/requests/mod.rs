@@ -10,11 +10,13 @@ mod get_page_list;
 mod get_views;
 
 use std::rc::Rc;
+use reqwest::{blocking::Client, Error};
+use serde::{Serialize, Serializer};
+use serde::ser;
 
 pub use create_account::CreateAccount;
 pub use edit_account_info::EditAccountInfo;
 pub use get_account_info::GetAccountInfo;
-use reqwest::{blocking::Client, Error};
 pub use revoke_access_token::RevokeAccessToken;
 
 pub use create_page::CreatePage;
@@ -30,6 +32,22 @@ pub trait ApiMethod {
 
     fn new (client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder;
     fn send(&self) -> Result<Self::Response, Error>;
+}
+
+pub struct ApiFieldSerializer;
+
+
+impl ApiFieldSerializer {
+    fn serialize<T: Serialize, S: Serializer>(
+        value: &T,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    {
+        match serde_json::to_string(value) {
+            Ok(json) => serializer.serialize_str(&json),
+            Err(_) => Err(ser::Error::custom("Failed to serialize value to json")),
+        }
+    }
 }
 
 

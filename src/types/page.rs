@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use super::node::Node;
+use super::{node::Node, TelegraphType};
 
 
 #[derive(Deserialize, Default, Debug)]
@@ -16,6 +16,10 @@ pub struct Page {
     pub views: u32,
     pub can_edit: Option<bool>
 }
+
+
+impl TelegraphType for Page {}
+
 
 #[cfg(test)]
 mod tests {

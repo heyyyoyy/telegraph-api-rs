@@ -26,10 +26,13 @@ pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
 use crate::TelegraphError;
-use crate::types::TelegraphResult;
+use crate::requests;
+use crate::types::{TelegraphResult, TelegraphType};
 
 
-pub trait Request {
+pub trait Request 
+where <Self as requests::Request>::Response: TelegraphType
+{
     type MethodBuilder;
     type Response;
 

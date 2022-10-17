@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use super::page::Page;
+use super::{page::Page, TelegraphType};
 
 
 #[derive(Deserialize, Default, Debug)]
@@ -8,6 +8,10 @@ pub struct PageList {
     pub total_count: u32,
     pub pages: Vec<Page>
 }
+
+
+impl TelegraphType for PageList {}
+
 
 #[cfg(test)]
 mod tests {

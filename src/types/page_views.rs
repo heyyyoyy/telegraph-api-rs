@@ -1,10 +1,15 @@
 use serde::Deserialize;
 
+use super::TelegraphType;
+
 
 #[derive(Deserialize, Default, Debug)]
 pub struct PageViews {
     pub views: u32
 }
+
+
+impl TelegraphType for PageViews {}
 
 
 #[cfg(test)]

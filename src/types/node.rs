@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::NodeElement;
+use super::{NodeElement, TelegraphType};
 
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -9,6 +9,9 @@ pub enum Node {
     String(String),
     NodeElement(NodeElement)
 }
+
+
+impl TelegraphType for Node {}
 
 
 #[cfg(test)]

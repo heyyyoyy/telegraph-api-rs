@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 pub mod types;
 pub mod requests;
 pub mod error;

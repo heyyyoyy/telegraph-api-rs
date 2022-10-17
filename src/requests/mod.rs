@@ -10,7 +10,7 @@ mod get_page_list;
 mod get_views;
 
 use std::sync::Arc;
-use reqwest::{blocking::Client, Error};
+use reqwest::blocking::Client;
 use serde::{Serialize, Serializer};
 use serde::ser;
 
@@ -25,13 +25,23 @@ pub use get_page::GetPage;
 pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
+use crate::TelegraphError;
+use crate::types::TelegraphResult;
+
 
 pub trait Request {
     type MethodBuilder;
     type Response;
 
     fn new (client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder;
-    fn send(&self) -> Result<Self::Response, Error>;
+    fn send(&self) -> Result<Self::Response, TelegraphError>;
+    fn catch_api_error(resp: TelegraphResult<Self::Response>) -> Result<Self::Response, TelegraphError> {
+        if !resp.ok {
+            Err(resp.error.unwrap())
+        } else {
+            Ok(resp.result.unwrap())
+        }
+    }
 }
 
 

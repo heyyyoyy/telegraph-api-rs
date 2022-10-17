@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-use reqwest::{blocking::Client, Error};
+use reqwest::blocking::Client;
 use serde::Serialize;
 
 use crate::types::{Page, TelegraphResult};
-use crate::Request;
+use crate::{Request, TelegraphError};
 
 
 #[derive(Default, Serialize)]
@@ -25,10 +25,10 @@ impl Request for GetPage {
     fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
-    fn send(&self) -> Result<Self::Response, Error> {
+    fn send(&self) -> Result<Self::Response, TelegraphError> {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
         let json: TelegraphResult<Self::Response> = req.json()?;
-        Ok(json.result.unwrap_or_default())
+        Self::MethodBuilder::catch_api_error(json)
     }
 }
 

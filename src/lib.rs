@@ -1,5 +1,6 @@
 pub mod types;
 pub mod requests;
+pub mod error;
 
 use std::sync::Arc;
 use reqwest::blocking::Client;
@@ -12,6 +13,7 @@ use crate::requests::{
     GetPageList, GetViews
 };
 pub use crate::requests::Request;
+pub use crate::error::TelegraphError;
 
 
 struct MethodName {
@@ -130,6 +132,6 @@ impl Telegraph {
 }
 
 
-pub fn build_content(content: &str) -> Result<Vec<Node>, serde_json::Error> {
-    serde_json::from_str(content)
+pub fn build_content(content: &str) -> Result<Vec<Node>, TelegraphError> {
+    serde_json::from_str(content).map_err(TelegraphError::from)
 }

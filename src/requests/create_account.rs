@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
-use reqwest::{blocking::Client, Error};
+use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, Request};
+use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
 
 
 #[derive(Default, Serialize)]
@@ -14,7 +14,9 @@ pub struct CreateAccount {
     method_name: Arc<String>,
 
     short_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     author_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     author_url: Option<String>
 }
 
@@ -26,10 +28,10 @@ impl Request for CreateAccount {
     fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
-    fn send(&self) -> Result<Self::Response, Error> {
+    fn send(&self) -> Result<Self::Response, TelegraphError> {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
         let json: TelegraphResult<Self::Response> = req.json()?;
-        Ok(json.result.unwrap_or_default())
+        Self::MethodBuilder::catch_api_error(json)
     }
 }
 

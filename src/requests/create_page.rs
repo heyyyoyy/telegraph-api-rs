@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
-use reqwest::{blocking::Client, Error};
+use reqwest::blocking::Client;
 use serde::Serialize;
 
+use crate::TelegraphError;
 use crate::requests::{Request, ApiFieldSerializer};
 use crate::types::{Node, Page, TelegraphResult};
 
@@ -18,7 +19,9 @@ pub struct CreatePage {
     title: String,
     #[serde(serialize_with = "ApiFieldSerializer::serialize")]
     content: Vec<Node>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     author_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     author_url: Option<String>,
     return_content: bool
 }
@@ -31,10 +34,10 @@ impl Request for CreatePage {
     fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
-    fn send(&self) -> Result<Self::Response, Error> {
+    fn send(&self) -> Result<Self::Response, TelegraphError> {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
         let json: TelegraphResult<Self::Response> = req.json()?;
-        Ok(json.result.unwrap_or_default())
+        Self::MethodBuilder::catch_api_error(json)
     }
 }
 

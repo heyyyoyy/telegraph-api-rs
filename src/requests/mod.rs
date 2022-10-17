@@ -9,7 +9,7 @@ mod get_page;
 mod get_page_list;
 mod get_views;
 
-use std::rc::Rc;
+use std::sync::Arc;
 use reqwest::{blocking::Client, Error};
 use serde::{Serialize, Serializer};
 use serde::ser;
@@ -30,7 +30,7 @@ pub trait Request {
     type MethodBuilder;
     type Response;
 
-    fn new (client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder;
+    fn new (client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder;
     fn send(&self) -> Result<Self::Response, Error>;
 }
 
@@ -54,7 +54,7 @@ impl ApiFieldSerializer {
 pub struct RequestBuilder;
 
 impl RequestBuilder {
-    pub fn build<T> (client: Rc<Client>, method_name: Rc<String>) -> T
+    pub fn build<T> (client: Arc<Client>, method_name: Arc<String>) -> T
     where T: Request + Request<MethodBuilder = T>
     {
         T::new(client, method_name)

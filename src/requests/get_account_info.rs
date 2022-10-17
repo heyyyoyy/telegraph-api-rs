@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use reqwest::{blocking::Client, Error};
 use serde::{Serialize, Serializer};
@@ -12,9 +12,9 @@ use crate::types::{AccountField, TelegraphResult, Account};
 #[derive(Serialize)]
 pub struct GetAccountInfo {
     #[serde(skip)]
-    client: Rc<Client>,
+    client: Arc<Client>,
     #[serde(skip)]
-    method_name: Rc<String>,
+    method_name: Arc<String>,
 
     access_token: String,
     #[serde(serialize_with = "GetAccountInfo::serialize")]
@@ -40,7 +40,7 @@ impl Request for GetAccountInfo {
     type MethodBuilder = GetAccountInfo;
     type Response = Account;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { 
             client, 
             method_name, 

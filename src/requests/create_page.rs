@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
@@ -10,9 +10,9 @@ use crate::types::{Node, Page, TelegraphResult};
 #[derive(Default, Serialize)]
 pub struct CreatePage {
     #[serde(skip)]
-    client: Rc<Client>,
+    client: Arc<Client>,
     #[serde(skip)]
-    method_name: Rc<String>,
+    method_name: Arc<String>,
 
     access_token: String,
     title: String,
@@ -28,7 +28,7 @@ impl Request for CreatePage {
     type MethodBuilder = CreatePage;
     type Response = Page;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
     fn send(&self) -> Result<Self::Response, Error> {

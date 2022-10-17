@@ -11,7 +11,7 @@ use crate::requests::{
     CreatePage, RevokeAccessToken, EditPage, GetPage,
     GetPageList, GetViews
 };
-pub use crate::requests::ApiMethod;
+pub use crate::requests::Request;
 
 
 struct MethodName {

@@ -3,7 +3,7 @@ use std::rc::Rc;
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::{types::{PageList, TelegraphResult}, ApiMethod};
+use crate::{types::{PageList, TelegraphResult}, Request};
 
 
 #[derive(Serialize)]
@@ -18,12 +18,12 @@ pub struct GetPageList {
     limit: i32
 }
 
-impl ApiMethod for GetPageList {
-    type FunctionBulder = GetPageList;
+impl Request for GetPageList {
+    type MethodBuilder = GetPageList;
     type Response = PageList;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
-        Self::FunctionBulder { 
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+        Self::MethodBuilder { 
             client, 
             method_name, 
             access_token: "".to_string(),

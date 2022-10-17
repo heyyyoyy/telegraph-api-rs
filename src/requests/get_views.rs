@@ -3,7 +3,7 @@ use std::rc::Rc;
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::{types::{TelegraphResult, PageViews}, ApiMethod};
+use crate::{types::{TelegraphResult, PageViews}, Request};
 
 
 #[derive(Serialize)]
@@ -20,12 +20,12 @@ pub struct GetViews {
     hour: i32
 }
 
-impl ApiMethod for GetViews {
-    type FunctionBulder = GetViews;
+impl Request for GetViews {
+    type MethodBuilder = GetViews;
     type Response = PageViews;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
-        Self::FunctionBulder { 
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+        Self::MethodBuilder { 
             client, 
             method_name,
             path: "".to_string(),

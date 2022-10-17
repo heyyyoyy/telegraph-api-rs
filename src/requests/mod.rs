@@ -26,16 +26,16 @@ pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
 
-pub trait ApiMethod {
-    type FunctionBulder;
+pub trait Request {
+    type MethodBuilder;
     type Response;
 
-    fn new (client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder;
+    fn new (client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder;
     fn send(&self) -> Result<Self::Response, Error>;
 }
 
-pub struct ApiFieldSerializer;
 
+pub struct ApiFieldSerializer;
 
 impl ApiFieldSerializer {
     fn serialize<T: Serialize, S: Serializer>(
@@ -55,7 +55,7 @@ pub struct RequestBuilder;
 
 impl RequestBuilder {
     pub fn build<T> (client: Rc<Client>, method_name: Rc<String>) -> T
-    where T: ApiMethod + ApiMethod<FunctionBulder = T>
+    where T: Request + Request<MethodBuilder = T>
     {
         T::new(client, method_name)
     }

@@ -5,7 +5,7 @@ use serde::{Serialize, Serializer};
 use serde::ser;
 
 
-use crate::ApiMethod;
+use crate::Request;
 use crate::types::{AccountField, TelegraphResult, Account};
 
 
@@ -36,12 +36,12 @@ impl GetAccountInfo {
 }
 
 
-impl ApiMethod for GetAccountInfo {
-    type FunctionBulder = GetAccountInfo;
+impl Request for GetAccountInfo {
+    type MethodBuilder = GetAccountInfo;
     type Response = Account;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
-        Self::FunctionBulder { 
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+        Self::MethodBuilder { 
             client, 
             method_name, 
             access_token: "".into(), 

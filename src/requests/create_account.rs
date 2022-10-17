@@ -3,7 +3,7 @@ use std::rc::Rc;
 use reqwest::{blocking::Client, Error};
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, ApiMethod};
+use crate::{types::{Account, TelegraphResult}, Request};
 
 
 #[derive(Default, Serialize)]
@@ -19,12 +19,12 @@ pub struct CreateAccount {
 }
 
 
-impl ApiMethod for CreateAccount {
-    type FunctionBulder = CreateAccount;
+impl Request for CreateAccount {
+    type MethodBuilder = CreateAccount;
     type Response = Account;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
-        Self::FunctionBulder { client, method_name, ..Self::default() }
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
+        Self::MethodBuilder { client, method_name, ..Self::default() }
     }
     fn send(&self) -> Result<Self::Response, Error> {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;

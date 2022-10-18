@@ -6,25 +6,25 @@ use super::TelegraphType;
 /// Available fields of the account struct
 #[derive(Serialize)]
 pub enum AccountField {
-    #[serde(rename = "short_name")]
     /// short_name
+    #[serde(rename = "short_name")]
     ShortName,
-    #[serde(rename = "author_name")]
     /// author_name
+    #[serde(rename = "author_name")]
     AuthorName,
-    #[serde(rename = "author_url")]
     /// author_url
+    #[serde(rename = "author_url")]
     AuthorUrl,
-    #[serde(rename = "auth_url")]
     /// auth_url
+    #[serde(rename = "auth_url")]
     AuthUrl,
-    #[serde(rename = "page_count")]
     /// page_count
+    #[serde(rename = "page_count")]
     PageCount
 }
 
 
-/// This object represents a Telegraph account
+/// Object represents a Telegraph account
 #[derive(Deserialize, Default, Debug)]
 pub struct Account {
     /// Account name, helps users with several accounts remember 

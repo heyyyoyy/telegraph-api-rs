@@ -3,6 +3,9 @@ use serde::{Deserialize, Serialize};
 use super::{NodeElement, TelegraphType};
 
 
+#[allow(missing_docs)]
+/// This abstract object represents a DOM Node. 
+/// It can be a String which represents a DOM text node or a [`NodeElement`].
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(untagged)]
 pub enum Node {
@@ -18,7 +21,7 @@ impl TelegraphType for Node {}
 mod tests {
     use serde_json;
 
-    use crate::types::NodeElement;
+    use crate::types::{NodeElement, NodeTag};
 
     use super::Node;
 
@@ -46,6 +49,11 @@ mod tests {
         } else {
             NodeElement::default()
         };
-        assert_eq!(el.tag, "p");
+        assert_eq!(el.tag.map( |node_tag|
+            match node_tag {
+                NodeTag::P(tag) => tag,
+                _ => "".to_string()
+            }
+        ).unwrap(), "p");
     }
 }

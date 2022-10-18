@@ -1,3 +1,20 @@
+//! Available methods
+//! 
+//! The response contains a [`Result`] with struct implemented [`Request`] trait.
+//! 
+//! # Result
+//! Always has a Boolean field `ok`. If `ok` equals `true`, the request was successful, 
+//! and the result of the query can be found in the `result` field. 
+//! All queries must be made using UTF-8.
+//! 
+//! # Error
+//! 
+//! In case of an unsuccessful request, `ok` equals `false`, 
+//! and the `error` is explained in the error 
+//! [field][TelegraphError::ApiError] (e.g. SHORT_NAME_REQUIRED).
+
+
+
 mod create_account;
 mod edit_account_info;
 mod get_account_info;
@@ -26,18 +43,23 @@ pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
 use crate::TelegraphError;
-use crate::requests;
 use crate::types::{TelegraphResult, TelegraphType};
 
 
+/// Trait for API methods. 
 pub trait Request 
-where <Self as requests::Request>::Response: TelegraphType
+where <Self as Request>::Response: TelegraphType
 {
+    /// Represents a API methods struct
     type MethodBuilder;
+    /// Type for [`TelegraphType`]
     type Response;
 
+    /// Struct onstructor
     fn new (client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder;
+    /// Sending request to API
     fn send(&self) -> Result<Self::Response, TelegraphError>;
+    /// Error handling
     fn catch_api_error(resp: TelegraphResult<Self::Response>) -> Result<Self::Response, TelegraphError> {
         if !resp.ok {
             Err(resp.error.unwrap())
@@ -48,6 +70,7 @@ where <Self as requests::Request>::Response: TelegraphType
 }
 
 
+/// Custom serializer for [method bulders][Request::MethodBuilder]
 pub struct ApiFieldSerializer;
 
 impl ApiFieldSerializer {
@@ -64,9 +87,11 @@ impl ApiFieldSerializer {
 }
 
 
+/// Request builder for available methods
 pub struct RequestBuilder;
 
 impl RequestBuilder {
+    /// Call constructor of `T` struct
     pub fn build<T> (client: Arc<Client>, method_name: Arc<String>) -> T
     where T: Request + Request<MethodBuilder = T>
     {

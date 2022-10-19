@@ -3,7 +3,9 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
+use crate::types::{Account, TelegraphResult};
+use crate::requests::Request;
+use crate::error::TelegraphError;
 
 
 /// Builder of `revokeAccessToken`
@@ -34,7 +36,7 @@ impl Request for RevokeAccessToken {
 
 
 impl RevokeAccessToken {
-    /// Setting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self

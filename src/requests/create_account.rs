@@ -3,7 +3,9 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
+use crate::types::{Account, TelegraphResult};
+use crate::error::TelegraphError;
+use crate::requests::Request;
 
 
 /// Builder of `createAccount`
@@ -38,19 +40,23 @@ impl Request for CreateAccount {
 
 
 impl CreateAccount {
-    /// Settting short_name
+    /// Required. Account name, helps users with several accounts remember 
+    /// which they are currently using. Displayed to the user above the 
+    /// "Edit/Publish" button on Telegra.ph, other users don't see this name.
     pub fn short_name(&mut self, short_name: &str) -> &mut Self {
         self.short_name = short_name.into();
         self
     }
 
-    /// Settting author_name
+    /// Default author name used when creating new articles.
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
-    /// Settting author_url
+    /// Default profile link, opened when users click on the author's 
+    /// name below the title. Can be any link, not 
+    /// necessarily to a Telegram profile or channel.
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self

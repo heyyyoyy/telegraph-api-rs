@@ -3,7 +3,7 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::TelegraphError;
+use crate::error::TelegraphError;
 use crate::requests::{Request, ApiFieldSerializer};
 use crate::types::{Node, Page, TelegraphResult};
 
@@ -44,37 +44,38 @@ impl Request for CreatePage {
 
 
 impl CreatePage {
-    /// Settting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
-    /// Settting title
+    /// Required. Page title.
     pub fn title(&mut self, title: &str) -> &mut Self {
         self.title = title.into();
         self
     }
 
-    /// Settting content
+    /// Required. Content of the page.
     pub fn content(&mut self, content: Vec<Node>) -> &mut Self {
         self.content = content;
         self
     }
 
-    /// Settting author_name
+    /// Author name, displayed below the article's title.
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
-    /// Settting author_url
+    /// Profile link, opened when users click on the author's name 
+    /// below the title. Can be any link, not necessarily to a Telegram profile or channel.
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self
     }
 
-    /// Settting return_content
+    /// If `true`, a content field will be returned in the [`Page`].
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
         self.return_content = return_content;
         self

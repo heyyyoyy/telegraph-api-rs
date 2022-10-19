@@ -3,7 +3,9 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
+use crate::types::{Account, TelegraphResult};
+use crate::requests::Request;
+use crate::error::TelegraphError;
 
 
 /// Builder of `editAccountInfo`
@@ -40,25 +42,27 @@ impl Request for EditAccountInfo {
 
 
 impl EditAccountInfo {
-    /// Settting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
-    /// Settting short_name
+    /// New account name.
     pub fn short_name(&mut self, short_name: &str) -> &mut Self {
         self.short_name = Some(short_name.into());
         self
     }
 
-    /// Settting author_name
+    /// New default author name used when creating new articles.
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
-    /// Settting author_url
+    /// New default profile link, opened when users click on the author's 
+    /// name below the title. Can be any link, 
+    /// not necessarily to a Telegram profile or channel.
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self

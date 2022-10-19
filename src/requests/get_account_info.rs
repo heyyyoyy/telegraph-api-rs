@@ -4,9 +4,9 @@ use reqwest::blocking::Client;
 use serde::Serialize;
 
 
-use crate::{Request, TelegraphError};
+use crate::error::TelegraphError;
 use crate::types::{AccountField, TelegraphResult, Account};
-use crate::requests::ApiFieldSerializer;
+use crate::requests::{Request, ApiFieldSerializer};
 
 
 /// Builder of `getAccountInfo`
@@ -45,13 +45,14 @@ impl Request for GetAccountInfo {
 
 
 impl GetAccountInfo {
-    /// Setting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
-    /// Setting fields
+    /// List of account fields to return. 
+    /// Available fields [`AccountField`].
     pub fn fields(&mut self, fields: Vec<AccountField>) -> &mut Self {
         self.fields = fields.into();
         self

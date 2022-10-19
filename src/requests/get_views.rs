@@ -3,7 +3,9 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{TelegraphResult, PageViews}, Request, TelegraphError};
+use crate::types::{TelegraphResult, PageViews};
+use crate::requests::Request;
+use crate::error::TelegraphError;
 
 
 /// Builder of `getViews`

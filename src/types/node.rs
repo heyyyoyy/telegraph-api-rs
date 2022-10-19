@@ -51,7 +51,7 @@ mod tests {
         };
         assert_eq!(el.tag.map( |node_tag|
             match node_tag {
-                NodeTag::P(tag) => tag,
+                NodeTag::P => "p".to_string(),
                 _ => "".to_string()
             }
         ).unwrap(), "p");

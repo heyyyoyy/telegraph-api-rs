@@ -4,7 +4,8 @@ use reqwest::blocking::Client;
 use serde::Serialize;
 
 use crate::types::{Page, TelegraphResult};
-use crate::{Request, TelegraphError};
+use crate::error::TelegraphError;
+use crate::requests::Request;
 
 
 /// Builder of `getPage`

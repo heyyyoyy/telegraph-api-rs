@@ -3,7 +3,7 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::TelegraphError;
+use crate::error::TelegraphError;
 use crate::requests::{Request, ApiFieldSerializer};
 use crate::types::{Node, Page, TelegraphResult};
 

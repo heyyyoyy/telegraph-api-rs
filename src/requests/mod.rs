@@ -42,7 +42,7 @@ pub use get_page::GetPage;
 pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
-use crate::TelegraphError;
+use crate::error::TelegraphError;
 use crate::types::{TelegraphResult, TelegraphType};
 
 

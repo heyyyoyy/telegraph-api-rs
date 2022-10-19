@@ -8,53 +8,53 @@ use super::node::Node;
 #[derive(Deserialize, Serialize, Debug)]
 pub enum NodeTag {
     #[serde(rename = "a")]
-    A(String),
+    A,
     #[serde(rename = "aside")]
-    Aside(String),
+    Aside,
     #[serde(rename = "b")]
-    B(String),
+    B,
     #[serde(rename = "blockquote")]
-    Blockquote(String),
+    Blockquote,
     #[serde(rename = "br")]
-    Br(String),
+    Br,
     #[serde(rename = "code")]
-    Code(String),
+    Code,
     #[serde(rename = "em")]
-    Em(String),
+    Em,
     #[serde(rename = "figcaption")]
-    Figcaption(String),
+    Figcaption,
     #[serde(rename = "figure")]
-    Figure(String),
+    Figure,
     #[serde(rename = "h3")]
-    H3(String),
+    H3,
     #[serde(rename = "h4")]
-    H4(String),
+    H4,
     #[serde(rename = "hr")]
-    Hr(String),
+    Hr,
     #[serde(rename = "i")]
-    I(String),
+    I,
     #[serde(rename = "iframe")]
-    Iframe(String),
+    Iframe,
     #[serde(rename = "img")]
-    Img(String),
+    Img,
     #[serde(rename = "li")]
-    Li(String),
+    Li,
     #[serde(rename = "ol")]
-    Ol(String),
+    Ol,
     #[serde(rename = "p")]
-    P(String),
+    P,
     #[serde(rename = "pre")]
-    Pre(String),
+    Pre,
     #[serde(rename = "s")]
-    S(String),
+    S,
     #[serde(rename = "strong")]
-    Strong(String),
+    Strong,
     #[serde(rename = "u")]
-    U(String),
+    U,
     #[serde(rename = "ul")]
-    Ul(String),
+    Ul,
     #[serde(rename = "video")]
-    Video(String)
+    Video
 }
 
 
@@ -102,12 +102,14 @@ mod tests {
             "children": ["Hello world!"]
         }"#;
         let node_element: NodeElement = serde_json::from_str(node_el_str).unwrap_or_default();
-        let tag = if let Some(NodeTag::P(tag)) = node_element.tag{
-            tag
-        } else {
-            String::new()
-        };
-        assert_eq!(tag, "p");
+        let tag = node_element.tag.map(
+            |tag| match tag {
+                NodeTag::P => "p".to_string(),
+                _ => "".to_string()
+            }
+        );
+
+        assert_eq!(tag.unwrap(), "p");
 
         let node = node_element.children.unwrap_or_default().into_iter().nth(0);
         let el = if let Some(Node::String(el)) = node {
@@ -134,5 +136,14 @@ mod tests {
         };
 
         assert_eq!(node_attr_element, "link1"); 
+    }
+
+    #[test]
+    fn node_element_serialize() {
+        let node_element = vec![NodeElement {
+            tag: Some(NodeTag::P), children: Some(vec![Node::String("test".to_string())]), ..NodeElement::default()
+        }];
+        let res = serde_json::to_string(&node_element);
+        assert_eq!(res.unwrap_or("".to_string()), "[{\"tag\":\"p\",\"attrs\":null,\"children\":[\"test\"]}]".to_string()); 
     }
 }

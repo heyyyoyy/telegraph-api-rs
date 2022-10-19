@@ -3,7 +3,9 @@ use std::sync::Arc;
 use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{PageList, TelegraphResult}, Request, TelegraphError};
+use crate::types::{PageList, TelegraphResult};
+use crate::requests::Request;
+use crate::error::TelegraphError;
 
 
 /// Builder of `getPageList`

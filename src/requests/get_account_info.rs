@@ -9,6 +9,7 @@ use crate::types::{AccountField, TelegraphResult, Account};
 use crate::requests::ApiFieldSerializer;
 
 
+/// Builder of `getAccountInfo`
 #[derive(Serialize)]
 pub struct GetAccountInfo {
     #[serde(skip)]
@@ -44,11 +45,13 @@ impl Request for GetAccountInfo {
 
 
 impl GetAccountInfo {
+    /// Setting access_token
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
+    /// Setting fields
     pub fn fields(&mut self, fields: Vec<AccountField>) -> &mut Self {
         self.fields = fields.into();
         self

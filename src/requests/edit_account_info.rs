@@ -6,6 +6,7 @@ use serde::Serialize;
 use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
 
 
+/// Builder of `editAccountInfo`
 #[derive(Default, Serialize)]
 pub struct EditAccountInfo {
     #[serde(skip)]
@@ -39,21 +40,25 @@ impl Request for EditAccountInfo {
 
 
 impl EditAccountInfo {
+    /// Settting access_token
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
+    /// Settting short_name
     pub fn short_name(&mut self, short_name: &str) -> &mut Self {
         self.short_name = Some(short_name.into());
         self
     }
 
+    /// Settting author_name
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
+    /// Settting author_url
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self

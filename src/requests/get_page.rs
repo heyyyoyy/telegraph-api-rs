@@ -7,6 +7,7 @@ use crate::types::{Page, TelegraphResult};
 use crate::{Request, TelegraphError};
 
 
+/// Builder of `getPage`
 #[derive(Default, Serialize)]
 pub struct GetPage {
     #[serde(skip)]
@@ -34,11 +35,13 @@ impl Request for GetPage {
 
 
 impl GetPage {
+    /// Setting path
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
+    /// Setting return_content
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
         self.return_content = return_content;
         self

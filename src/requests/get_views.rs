@@ -6,6 +6,7 @@ use serde::Serialize;
 use crate::{types::{TelegraphResult, PageViews}, Request, TelegraphError};
 
 
+/// Builder of `getViews`
 #[derive(Default, Serialize)]
 pub struct GetViews {
     #[serde(skip)]
@@ -44,26 +45,31 @@ impl Request for GetViews {
 
 
 impl GetViews {
+    /// Setting path
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
+    /// Setting year
     pub fn year(&mut self, year: i32) -> &mut Self {
         self.year = year.into();
         self
     }
 
+    /// Setting month
     pub fn month(&mut self, month: i32) -> &mut Self {
         self.month = month.into();
         self
     }
 
+    /// Setting day
     pub fn day(&mut self, day: i32) -> &mut Self {
         self.day = day.into();
         self
     }
 
+    /// Setting hour
     pub fn hour(&mut self, hour: i32) -> &mut Self {
         self.hour = hour.into();
         self

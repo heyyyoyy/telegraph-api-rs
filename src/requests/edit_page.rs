@@ -8,6 +8,7 @@ use crate::requests::{Request, ApiFieldSerializer};
 use crate::types::{Node, Page, TelegraphResult};
 
 
+/// Builder of `editPage`
 #[derive(Default, Serialize)]
 pub struct EditPage {
     #[serde(skip)]
@@ -44,36 +45,43 @@ impl Request for EditPage {
 
 
 impl EditPage {
+    /// Setting access_token
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
+    /// Setting title
     pub fn title(&mut self, title: &str) -> &mut Self {
         self.title = title.into();
         self
     }
 
+    /// Setting path
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
+    /// Setting content
     pub fn content(&mut self, content: Vec<Node>) -> &mut Self {
         self.content = content;
         self
     }
 
+    /// Setting author_name
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
+    /// Setting author_url
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self
     }
 
+    /// Setting return_content
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
         self.return_content = return_content;
         self

@@ -6,6 +6,7 @@ use serde::Serialize;
 use crate::{types::{Account, TelegraphResult}, Request, TelegraphError};
 
 
+/// Builder of `revokeAccessToken`
 #[derive(Default, Serialize)]
 pub struct RevokeAccessToken {
     #[serde(skip)]
@@ -33,6 +34,7 @@ impl Request for RevokeAccessToken {
 
 
 impl RevokeAccessToken {
+    /// Setting access_token
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self

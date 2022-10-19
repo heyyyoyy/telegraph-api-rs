@@ -1,15 +1,21 @@
+//! Errors that occurred while working with the library
+
 use reqwest;
 use serde::Deserialize;
 use serde_json;
 use std::{error, fmt};
 
 
+/// Enum of lib errors
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum TelegraphError {
+    /// Telegrapth API error
     ApiError(String),
+    /// Error occurred when sending the request
     #[serde(skip)]
     RequestError(reqwest::Error),
+    /// Error occurred when parsing data
     #[serde(skip)]
     ParseError(serde_json::Error)
 }

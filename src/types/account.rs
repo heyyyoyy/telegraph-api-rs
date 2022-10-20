@@ -1,29 +1,56 @@
 use serde::{Deserialize, Serialize};
 
+use super::TelegraphType;
+
+
+/// Available fields of the account struct
 #[derive(Serialize)]
 pub enum AccountField {
+    /// short_name
     #[serde(rename = "short_name")]
     ShortName,
+    /// author_name
     #[serde(rename = "author_name")]
     AuthorName,
+    /// author_url
     #[serde(rename = "author_url")]
     AuthorUrl,
+    /// auth_url
     #[serde(rename = "auth_url")]
     AuthUrl,
+    /// page_count
     #[serde(rename = "page_count")]
     PageCount
 }
 
 
+/// Object represents a Telegraph account
 #[derive(Deserialize, Default, Debug)]
 pub struct Account {
+    /// Account name, helps users with several accounts remember 
+    /// which they are currently using. 
+    /// Displayed to the user above the "Edit/Publish" button 
+    /// on Telegra.ph, other users don't see this name.
     pub short_name: Option<String>,
+    /// Default author name used when creating new articles.
     pub author_name: Option<String>,
+    /// Profile link, opened when users click on the author's name 
+    /// below the title. Can be any link, not necessarily 
+    /// to a Telegram profile or channel.
     pub author_url: Option<String>,
+    /// Only returned by the `createAccount` and `revokeAccessToken` method. 
+    /// Access token of the Telegraph account.
     pub access_token: Option<String>,
+    /// URL to authorize a browser on telegra.ph and connect 
+    /// it to a Telegraph account. This URL is valid for 
+    /// only one use and for 5 minutes only.
     pub auth_url: Option<String>,
+    /// Number of pages belonging to the Telegraph account.
     pub page_count: Option<i32>
 }
+
+
+impl TelegraphType for Account {}
 
 
 #[cfg(test)]

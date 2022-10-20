@@ -1,10 +1,17 @@
 use serde::Deserialize;
 
+use super::TelegraphType;
 
+
+/// This object represents the number of page views for a Telegraph article.
 #[derive(Deserialize, Default, Debug)]
 pub struct PageViews {
+    /// Number of page views for the target page.
     pub views: u32
 }
+
+
+impl TelegraphType for PageViews {}
 
 
 #[cfg(test)]

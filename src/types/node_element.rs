@@ -3,6 +3,63 @@ use serde::{Deserialize, Serialize};
 use super::node::Node;
 
 
+#[allow(missing_docs)]
+/// Available tags.
+#[derive(Deserialize, Serialize, Debug)]
+pub enum NodeTag {
+    #[serde(rename = "a")]
+    A,
+    #[serde(rename = "aside")]
+    Aside,
+    #[serde(rename = "b")]
+    B,
+    #[serde(rename = "blockquote")]
+    Blockquote,
+    #[serde(rename = "br")]
+    Br,
+    #[serde(rename = "code")]
+    Code,
+    #[serde(rename = "em")]
+    Em,
+    #[serde(rename = "figcaption")]
+    Figcaption,
+    #[serde(rename = "figure")]
+    Figure,
+    #[serde(rename = "h3")]
+    H3,
+    #[serde(rename = "h4")]
+    H4,
+    #[serde(rename = "hr")]
+    Hr,
+    #[serde(rename = "i")]
+    I,
+    #[serde(rename = "iframe")]
+    Iframe,
+    #[serde(rename = "img")]
+    Img,
+    #[serde(rename = "li")]
+    Li,
+    #[serde(rename = "ol")]
+    Ol,
+    #[serde(rename = "p")]
+    P,
+    #[serde(rename = "pre")]
+    Pre,
+    #[serde(rename = "s")]
+    S,
+    #[serde(rename = "strong")]
+    Strong,
+    #[serde(rename = "u")]
+    U,
+    #[serde(rename = "ul")]
+    Ul,
+    #[serde(rename = "video")]
+    Video
+}
+
+
+#[allow(missing_docs)]
+/// Available attrs.
 #[derive(Deserialize, Serialize, Debug)]
 pub enum NodeElementAttr {
     #[serde(rename = "id")]
@@ -13,10 +70,18 @@ pub enum NodeElementAttr {
     Src(String)
 }
 
+
+/// Object represents a DOM element node.
 #[derive(Deserialize, Serialize, Default, Debug)]
 pub struct NodeElement {
-    pub tag: String,
+    /// Name of the DOM element. 
+    /// Available tags [`NodeTag`]
+    pub tag: Option<NodeTag>,
+    /// Attributes of the DOM element. Key of object represents name of attribute, 
+    /// value represents value of attribute. 
+    /// Available attributes [`NodeElementAttr`]
     pub attrs: Option<NodeElementAttr>,
+    /// List of child nodes for the DOM element.
     pub children: Option<Vec<Node>>
 }
 
@@ -24,6 +89,8 @@ pub struct NodeElement {
 #[cfg(test)]
 mod tests {
     use serde_json;
+
+    use crate::types::NodeTag;
 
     use super::{NodeElement, Node, NodeElementAttr};
 
@@ -35,7 +102,14 @@ mod tests {
             "children": ["Hello world!"]
         }"#;
         let node_element: NodeElement = serde_json::from_str(node_el_str).unwrap_or_default();
-        assert_eq!(node_element.tag, "p");
+        let tag = node_element.tag.map(
+            |tag| match tag {
+                NodeTag::P => "p".to_string(),
+                _ => "".to_string()
+            }
+        );
+
+        assert_eq!(tag.unwrap(), "p");
 
         let node = node_element.children.unwrap_or_default().into_iter().nth(0);
         let el = if let Some(Node::String(el)) = node {
@@ -62,5 +136,14 @@ mod tests {
         };
 
         assert_eq!(node_attr_element, "link1"); 
+    }
+
+    #[test]
+    fn node_element_serialize() {
+        let node_element = vec![NodeElement {
+            tag: Some(NodeTag::P), children: Some(vec![Node::String("test".to_string())]), ..NodeElement::default()
+        }];
+        let res = serde_json::to_string(&node_element);
+        assert_eq!(res.unwrap_or("".to_string()), "[{\"tag\":\"p\",\"attrs\":null,\"children\":[\"test\"]}]".to_string()); 
     }
 }

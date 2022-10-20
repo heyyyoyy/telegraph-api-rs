@@ -1,13 +1,22 @@
 use serde::Deserialize;
 
-use super::page::Page;
+use super::{page::Page, TelegraphType};
 
 
+/// Object represents a list of Telegraph articles 
+/// belonging to an account. 
+/// Most recently created articles first.
 #[derive(Deserialize, Default, Debug)]
 pub struct PageList {
+    /// Total number of pages belonging to the target Telegraph account.
     pub total_count: u32,
+    /// Requested pages of the target Telegraph account.
     pub pages: Vec<Page>
 }
+
+
+impl TelegraphType for PageList {}
+
 
 #[cfg(test)]
 mod tests {

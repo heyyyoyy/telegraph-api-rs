@@ -1,17 +1,20 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
-use reqwest::{blocking::Client, Error};
+use reqwest::blocking::Client;
 use serde::Serialize;
 
-use crate::{types::{Account, TelegraphResult}, ApiMethod};
+use crate::types::{Account, TelegraphResult};
+use crate::requests::Request;
+use crate::error::TelegraphError;
 
 
+/// Builder of `editAccountInfo`
 #[derive(Default, Serialize)]
 pub struct EditAccountInfo {
     #[serde(skip)]
-    client: Rc<Client>,
+    client: Arc<Client>,
     #[serde(skip)]
-    method_name: Rc<String>,
+    method_name: Arc<String>,
 
     access_token: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -23,37 +26,43 @@ pub struct EditAccountInfo {
 }
 
 
-impl ApiMethod for EditAccountInfo {
-    type FunctionBulder = EditAccountInfo;
+impl Request for EditAccountInfo {
+    type MethodBuilder = EditAccountInfo;
     type Response = Account;
 
-    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::FunctionBulder {
-        Self::FunctionBulder { client, method_name, ..Self::default() }
+    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+        Self::MethodBuilder { client, method_name, ..Self::default() }
     }
-    fn send(&self) -> Result<Self::Response, Error> {
+    fn send(&self) -> Result<Self::Response, TelegraphError> {
         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
         let json: TelegraphResult<Self::Response> = req.json()?;
-        Ok(json.result.unwrap_or_default())
+        Self::MethodBuilder::catch_api_error(json)
     }
 }
 
 
 impl EditAccountInfo {
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
+    /// New account name.
     pub fn short_name(&mut self, short_name: &str) -> &mut Self {
         self.short_name = Some(short_name.into());
         self
     }
 
+    /// New default author name used when creating new articles.
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
+    /// New default profile link, opened when users click on the author's 
+    /// name below the title. Can be any link, 
+    /// not necessarily to a Telegram profile or channel.
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self

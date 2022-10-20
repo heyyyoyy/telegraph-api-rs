@@ -45,43 +45,44 @@ impl Request for EditPage {
 
 
 impl EditPage {
-    /// Setting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
-    /// Setting title
+    /// Required. Path to the page.
     pub fn title(&mut self, title: &str) -> &mut Self {
         self.title = title.into();
         self
     }
 
-    /// Setting path
+    /// Required. Page title.
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
-    /// Setting content
+    /// Required. Content of the page.
     pub fn content(&mut self, content: Vec<Node>) -> &mut Self {
         self.content = content;
         self
     }
 
-    /// Setting author_name
+    /// Author name, displayed below the article's title.
     pub fn author_name(&mut self, author_name: &str) -> &mut Self {
         self.author_name = Some(author_name.into());
         self
     }
 
-    /// Setting author_url
+    /// Profile link, opened when users click on the author's name 
+    /// below the title. Can be any link, not necessarily to a Telegram profile or channel.
     pub fn author_url(&mut self, author_url: &str) -> &mut Self {
         self.author_url = Some(author_url.into());
         self
     }
 
-    /// Setting return_content
+    /// If `true`, a content field will be returned in the [`Page`].
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
         self.return_content = return_content;
         self

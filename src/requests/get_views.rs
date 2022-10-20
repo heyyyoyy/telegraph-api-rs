@@ -47,31 +47,39 @@ impl Request for GetViews {
 
 
 impl GetViews {
-    /// Setting path
+    /// Required. Path to the Telegraph page 
+    /// (in the format Title-12-31, where 12 is the month 
+    /// and 31 the day the article was first published).
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
-    /// Setting year
+    /// Required if month is passed. 
+    /// If passed, the number of page 
+    /// views for the requested year will be returned.
     pub fn year(&mut self, year: i32) -> &mut Self {
         self.year = year.into();
         self
     }
 
-    /// Setting month
+    /// Required if day is passed. 
+    /// If passed, the number of page views 
+    /// for the requested month will be returned.
     pub fn month(&mut self, month: i32) -> &mut Self {
         self.month = month.into();
         self
     }
 
-    /// Setting day
+    /// Required if hour is passed. 
+    /// If passed, the number of page views 
+    /// for the requested day will be returned.
     pub fn day(&mut self, day: i32) -> &mut Self {
         self.day = day.into();
         self
     }
 
-    /// Setting hour
+    /// If passed, the number of page views for the requested hour will be returned.
     pub fn hour(&mut self, hour: i32) -> &mut Self {
         self.hour = hour.into();
         self

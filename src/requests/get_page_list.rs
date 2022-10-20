@@ -43,19 +43,19 @@ impl Request for GetPageList {
 
 
 impl GetPageList {
-    /// Setting access_token
+    /// Required. Access token of the Telegraph account.
     pub fn access_token(&mut self, access_token: &str) -> &mut Self {
         self.access_token = access_token.into();
         self
     }
 
-    /// Setting offset
+    /// Sequential number of the first page to be returned.
     pub fn offset(&mut self, offset: i32) -> &mut Self {
         self.offset = offset;
         self
     }
 
-    /// Setting limit
+    /// Limits the number of pages to be retrieved.
     pub fn limit(&mut self, limit: i32) -> &mut Self {
         self.limit = limit;
         self

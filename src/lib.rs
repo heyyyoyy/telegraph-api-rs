@@ -1,6 +1,6 @@
 #![warn(missing_docs)]
 #![warn(rustdoc::broken_intra_doc_links)]
-//! [Telegraph API](https://telegra.ph/api) lib in Rust
+//! Rust implementation of [Telegraph API](https://telegra.ph/api)
 //! 
 //! # Quick start
 //! 
@@ -125,14 +125,12 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_rs::{Telegraph, Request};
-    ///
-    /// let telegraph = Telegraph::new();
-    /// 
-    /// let token = "1234"; // Token from create method
-    /// let account = telegraph.edit_account_info()
-    /// .access_token(token)
-    /// .author_name("Test")
+    /// # use telegraph_rs::{Telegraph, Request, types::Account};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
+    /// let edited_account = telegraph.edit_account_info()
+    /// .access_token(&account.access_token.unwrap())
+    /// .author_name("Author name 2")
     /// .send()
     /// .unwrap();
     /// ```
@@ -149,13 +147,11 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_rs::{Telegraph, Request, types::AccountField};
-    /// 
-    /// let telegraph = Telegraph::new();
-    /// 
-    /// let token = "1234"; // Token from create method
-    /// let account = telegraph.get_account_info()
-    /// .access_token(token)
+    /// # use telegraph_rs::{Telegraph, Request, types::{Account, AccountField}};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
+    /// let account_info = telegraph.get_account_info()
+    /// .access_token(&account.access_token.unwrap())
     /// .fields(vec![AccountField::ShortName, AccountField::AuthorUrl])
     /// .send()
     /// .unwrap();
@@ -175,13 +171,11 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_rs::{Telegraph, Request, types::AccountField};
-    /// 
-    /// let telegraph = Telegraph::new();
-    /// 
-    /// let token = "1234"; // Token from create method
+    /// # use telegraph_rs::{Telegraph, Request, types::{Account}};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
     /// let account = telegraph.revoke_access_token()
-    /// .access_token(token)
+    /// .access_token(&account.access_token.unwrap())
     /// .send()
     /// .unwrap();
     /// ```
@@ -197,20 +191,18 @@ impl Telegraph {
     ///
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_rs::{Telegraph, Request, build_content, types::AccountField};
-    /// 
-    /// let telegraph = Telegraph::new();
-    /// 
-    /// let token = "1234"; // Token from create method
+    /// # use telegraph_rs::{Telegraph, Request, build_content, types::{Account}};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
     /// let content = r#"
     /// [
     ///     {
     ///         "tag": "h3",
-    ///         "children": ["Hello telegraph-rs"]
+    ///         "children": ["Hello world"]
     ///     },
     ///     {
     ///         "tag": "h4",
-    ///         "children": ["title"]
+    ///         "children": ["Title"]
     ///     },
     ///     {
     ///         "tag": "p",
@@ -227,7 +219,7 @@ impl Telegraph {
     /// let cont = build_content(content).unwrap();
     ///
     /// let page = telegraph.create_page()
-    /// .access_token(token)
+    /// .access_token(&account.access_token.unwrap())
     /// .title("Hello world")
     /// .content(cont)
     /// .return_content(true)
@@ -241,6 +233,52 @@ impl Telegraph {
         )
     }
 
+    /// Use this method to edit an existing Telegraph page. 
+    /// On success, returns a [`Page`][crate::types::Page].
+    /// 
+    /// # Example
+    /// ```rust, no_run
+    /// # use telegraph_rs::{Telegraph, Request, build_content, types::{Page, Account}};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
+    /// # let page = Page::default();
+    /// let new_content = r#"
+    /// [
+    ///    {
+    ///        "tag": "h3",
+    ///        "children": ["Hello world"]
+    ///    },
+    ///    {
+    ///       "tag": "h4",
+    ///        "children": ["Title"]
+    ///    },
+    ///    {
+    ///        "tag": "p",
+    ///        "children": [
+    ///            {
+    ///               "tag": "ul",
+    ///                "children": ["Some text"]
+    ///            },
+    ///            {
+    ///                "tag": "ul",
+    ///                "children": ["Some text 2"]
+    ///            }
+    ///        ]
+    ///    }
+    /// ]
+    /// "#;
+    ///
+    /// let new_cont = build_content(new_content).unwrap();
+    ///
+    /// let edited_page = telegraph.edit_page()
+    /// .access_token(&account.access_token.unwrap())
+    /// .title(&page.title)
+    /// .path(&page.path)
+    /// .content(new_cont)
+    /// .return_content(true)
+    /// .send()
+    /// .unwrap();
+    /// ```
     pub fn edit_page(&self) -> EditPage {
         RequestBuilder::build::<EditPage>(
             self.client.clone(), 
@@ -248,6 +286,20 @@ impl Telegraph {
         )
     }
 
+    /// Use this method to get a Telegraph page. 
+    /// Returns a [`Page`][crate::types::Page] on success.
+    ///
+    /// # Example
+    /// ```rust, no_run
+    /// # use telegraph_rs::{Telegraph, Request, types::{Page, Account}};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
+    /// # let page = Page::default();
+    /// let get_page = telegraph.get_page()
+    /// .path(&page.path)
+    /// .send()
+    /// .unwrap();
+    /// ```
     pub fn get_page(&self) -> GetPage {
         RequestBuilder::build::<GetPage>(
             self.client.clone(), 
@@ -255,6 +307,21 @@ impl Telegraph {
         )
     }
 
+    /// Use this method to get a list of pages belonging to a Telegraph account. 
+    /// Returns a [`PageList`][crate::types::PageList], 
+    /// sorted by most recently created pages first.
+    ///
+    /// # Example
+    /// ```rust, no_run
+    /// # use telegraph_rs::{Telegraph, Request, types::Account};
+    /// # let telegraph = Telegraph::new();
+    /// # let account = Account::default();
+    /// let page_list = telegraph.get_page_list()
+    /// .access_token(&account.access_token.unwrap())
+    /// .limit(2)
+    /// .send()
+    /// .unwrap();
+    /// ```
     pub fn get_page_list(&self) -> GetPageList {
         RequestBuilder::build::<GetPageList>(
             self.client.clone(), 
@@ -262,6 +329,23 @@ impl Telegraph {
         )
     }
 
+    /// Use this method to get the number of views for a Telegraph article. 
+    /// Returns a [`PageViews`][crate::types::PageViews] on success. 
+    /// By default, the total number of page views will be returned.
+    ///
+    /// # Example
+    /// ```rust, no_run
+    /// # use telegraph_rs::{Telegraph, Request, types::PageList};
+    /// # let telegraph = Telegraph::new();
+    /// # let page_list = PageList::default();
+    /// let count = telegraph.get_views()
+    /// .path(&page_list.pages[0].path)
+    /// .year(2022)
+    /// .month(10)
+    /// .day(15)
+    /// .send()
+    /// .unwrap();
+    /// ```
     pub fn get_views(&self) -> GetViews {
         RequestBuilder::build::<GetViews>(
             self.client.clone(), 
@@ -271,6 +355,39 @@ impl Telegraph {
 }
 
 
+/// Build page content from string
+/// 
+/// # Example
+/// ```rust, no_run
+/// # use telegraph_rs::build_content;
+/// let content = r#"
+/// [
+///    {
+///        "tag": "h3",
+///        "children": ["Hello world"]
+///    },
+///    {
+///       "tag": "h4",
+///        "children": ["Title"]
+///    },
+///    {
+///        "tag": "p",
+///        "children": [
+///            {
+///               "tag": "ul",
+///                "children": ["Some text"]
+///            },
+///            {
+///                "tag": "ul",
+///                "children": ["Some text 2"]
+///            }
+///        ]
+///    }
+/// ]
+/// "#;
+///
+/// let cont = build_content(content).unwrap();
+/// ``` 
 pub fn build_content(content: &str) -> Result<Vec<Node>, TelegraphError> {
     serde_json::from_str(content).map_err(TelegraphError::from)
 }

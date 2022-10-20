@@ -36,13 +36,15 @@ impl Request for GetPage {
 
 
 impl GetPage {
-    /// Setting path
+    /// Required. Path to the Telegraph page 
+    /// (in the format Title-12-31, 
+    /// i.e. everything that comes after http://telegra.ph/).
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self
     }
 
-    /// Setting return_content
+    /// If `true`, a content field will be returned in the [`Page`].
     pub fn return_content(&mut self, return_content: bool) -> &mut Self {
         self.return_content = return_content;
         self

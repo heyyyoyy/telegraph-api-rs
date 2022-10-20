@@ -12,7 +12,7 @@ Rust implementation of [Telegraph API](https://telegra.ph/api)
 Add dependency to the `Cargo.toml`
 ```toml
 [dependencies]
-telegraph-api-rs = "0.1.0"
+telegraph-api-rs = "0.1.1"
 ```
 
 And create account

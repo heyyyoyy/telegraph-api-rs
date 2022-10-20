@@ -5,7 +5,7 @@
 //! # Quick start
 //! 
 //! ```rust
-//! use telegraph_rs::{Telegraph, Request};
+//! use telegraph_api_rs::{Telegraph, Request};
 //! 
 //! let telegraph = Telegraph::new();
 //! let account = telegraph.create_account()
@@ -102,7 +102,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_rs::{Telegraph, Request};
+    /// use telegraph_api_rs::{Telegraph, Request};
     ///
     /// let telegraph = Telegraph::new();
     /// let account = telegraph.create_account()
@@ -125,7 +125,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::Account};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::Account};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// let edited_account = telegraph.edit_account_info()
@@ -147,7 +147,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::{Account, AccountField}};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::{Account, AccountField}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// let account_info = telegraph.get_account_info()
@@ -171,7 +171,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::{Account}};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::{Account}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// let account = telegraph.revoke_access_token()
@@ -191,7 +191,7 @@ impl Telegraph {
     ///
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, build_content, types::{Account}};
+    /// # use telegraph_api_rs::{Telegraph, Request, build_content, types::{Account}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// let content = r#"
@@ -238,7 +238,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, build_content, types::{Page, Account}};
+    /// # use telegraph_api_rs::{Telegraph, Request, build_content, types::{Page, Account}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// # let page = Page::default();
@@ -291,7 +291,7 @@ impl Telegraph {
     ///
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::{Page, Account}};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::{Page, Account}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// # let page = Page::default();
@@ -313,7 +313,7 @@ impl Telegraph {
     ///
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::Account};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::Account};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// let page_list = telegraph.get_page_list()
@@ -335,7 +335,7 @@ impl Telegraph {
     ///
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_rs::{Telegraph, Request, types::PageList};
+    /// # use telegraph_api_rs::{Telegraph, Request, types::PageList};
     /// # let telegraph = Telegraph::new();
     /// # let page_list = PageList::default();
     /// let count = telegraph.get_views()
@@ -359,7 +359,7 @@ impl Telegraph {
 /// 
 /// # Example
 /// ```rust, no_run
-/// # use telegraph_rs::build_content;
+/// # use telegraph_api_rs::build_content;
 /// let content = r#"
 /// [
 ///    {

@@ -38,7 +38,7 @@ impl Request for GetPage {
 impl GetPage {
     /// Required. Path to the Telegraph page 
     /// (in the format Title-12-31, 
-    /// i.e. everything that comes after http://telegra.ph/).
+    /// i.e. everything that comes after <http://telegra.ph/>).
     pub fn path(&mut self, path: &str) -> &mut Self {
         self.path = path.into();
         self

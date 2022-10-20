@@ -4,7 +4,7 @@
 //! 
 //! # Quick start
 //! 
-//! ```rust
+//! ```rust, no_run
 //! use telegraph_api_rs::{Telegraph, Request};
 //! 
 //! let telegraph = Telegraph::new();

@@ -28,8 +28,12 @@ pub mod requests;
 pub mod error;
 
 use std::sync::Arc;
-use reqwest::blocking::Client;
-use types::Node;
+use std::path::Path;
+use std::fs::File;
+use std::io::Read;
+
+use reqwest::blocking::{Client, multipart};
+use types::{Node, UploadResult, Media};
 
 use crate::requests::{
     RequestBuilder,
@@ -352,6 +356,74 @@ impl Telegraph {
             self.method_name.get_views.clone()
         )
     }
+
+    #[cfg(feature = "upload")]
+    fn get_mime<T>(path: T) -> String 
+    where T: AsRef<Path>
+    {
+        let mime = mime_guess::from_path(path).first_or(mime_guess::mime::IMAGE_JPEG);
+        format!("{}/{}", mime.type_(), mime.subtype())
+    }
+
+    #[cfg(feature = "upload")]
+    fn _upload<T>(client: &Client, files: &[T]) -> Result<Vec<Media>, TelegraphError> 
+    where T: AsRef<Path>
+    {
+        let mut form = multipart::Form::new();
+        for (index, file_name) in files.iter().enumerate() {
+            let mut buf = vec![];
+            let mut file = File::open(file_name)?;
+            file.read_to_end(&mut buf)?;
+            let part = multipart::Part::bytes(buf)
+                .file_name(index.to_string())
+                .mime_str(&Self::get_mime(file_name))?;
+            form = form.part(index.to_string(), part);
+        }
+
+        let response = client.post("https://telegra.ph/upload")
+        .multipart(form)
+        .send()?;
+        
+        match response.json::<UploadResult>()? {
+            UploadResult::Error { error } => Err(TelegraphError::ApiError(error)),
+            UploadResult::Ok(vec) => Ok(vec)
+        }
+    }
+
+    #[cfg(feature = "upload")]
+    /// Upload files to telegraph
+    /// 
+    /// # Example
+    /// ``` rust, no_run
+    /// # use telegraph_api_rs::Telegraph;
+    /// let telegraph = Telegraph::new();
+    /// let files = vec!["1.jpg", "2.png"];
+    /// let res = telegraph.upload(&files);
+    /// ```
+    pub fn upload<T>(&self, files: &[T]) -> Result<Vec<Media>, TelegraphError> 
+    where T: AsRef<Path>
+    {
+        Self::_upload(&self.client, files)
+    }
+
+    #[cfg(feature = "upload")]
+    /// Upload files to telegraph with custom client
+    /// 
+    /// # Example
+    /// ``` rust, no_run
+    /// # use telegraph_api_rs::Telegraph;
+    /// use reqwest::blocking::Client;
+    /// 
+    /// let files = vec!["1.jpg", "2.png"];
+    /// let client = Client::new();
+    /// let res = Telegraph::upload_with(&client, &files);
+    /// ```
+    pub fn upload_with<T>(client: &Client, files: &[T]) -> Result<Vec<Media>, TelegraphError> 
+    where T: AsRef<Path>
+    {
+        Self::_upload(client, files)
+    }
+
 }
 
 

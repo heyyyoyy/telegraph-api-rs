@@ -8,10 +8,15 @@ repository = "https://github.com/heyyyoyy/telegraph-api-rs"
 readme = "README.md"
 documentation = "https://docs.rs/telegraph-api-rs"
 
+[features]
+default = ["upload"]
+upload = ["mime_guess"]
+
 [dependencies]
-reqwest = { version = "0.11", features = ["blocking", "json"] }
+reqwest = { version = "0.11", features = ["blocking", "json", "multipart"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+mime_guess = { version = "2.0.4", optional = true }
 
 [dev-dependencies]
 serde_json = "1.0"

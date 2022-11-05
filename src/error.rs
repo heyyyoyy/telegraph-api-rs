@@ -3,7 +3,7 @@
 use reqwest;
 use serde::Deserialize;
 use serde_json;
-use std::{error, fmt};
+use std::{error, fmt, io};
 
 
 /// Enum of lib errors
@@ -17,7 +17,10 @@ pub enum TelegraphError {
     RequestError(reqwest::Error),
     /// Error occurred when parsing data
     #[serde(skip)]
-    ParseError(serde_json::Error)
+    ParseError(serde_json::Error),
+    /// Error occurred when working with files
+    #[serde(skip)]
+    IoError(io::Error)
 }
 
 
@@ -27,6 +30,7 @@ impl fmt::Display for TelegraphError {
             TelegraphError::ApiError(error) => write!(f, "Api error: {}", error),
             TelegraphError::RequestError(error) => write!(f, "Request error: {}", error),
             TelegraphError::ParseError(error) => write!(f, "Parse error: {}", error),
+            TelegraphError::IoError(error) => write!(f, "IO error: {}", error),
         }
     }
 }
@@ -38,6 +42,7 @@ impl error::Error for TelegraphError {
             TelegraphError::RequestError(error) => Some(error),
             TelegraphError::ApiError(_) => None,
             TelegraphError::ParseError(error) => Some(error),
+            TelegraphError::IoError(error) => Some(error),
         }
     }
 }
@@ -52,5 +57,11 @@ impl From<serde_json::Error> for TelegraphError {
 impl From<reqwest::Error> for TelegraphError {
     fn from(error: reqwest::Error) -> Self {
         TelegraphError::RequestError(error)
+    }
+}
+
+impl From<io::Error> for TelegraphError {
+    fn from(error: io::Error) -> Self {
+        TelegraphError::IoError(error)
     }
 }

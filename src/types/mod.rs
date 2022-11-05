@@ -10,6 +10,7 @@ mod node;
 mod node_element;
 mod page_list;
 mod page_views;
+mod media;
 
 
 use crate::TelegraphError;
@@ -20,6 +21,7 @@ pub use self::node::Node;
 pub use self::node_element::{NodeElement, NodeTag, NodeElementAttr};
 pub use self::page_list::PageList;
 pub use self::page_views::PageViews;
+pub use self::media::{UploadResult, Media};
 
 
 use serde::Deserialize;

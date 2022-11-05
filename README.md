@@ -12,11 +12,10 @@ Rust implementation of [Telegraph API](https://telegra.ph/api)
 Add dependency to the `Cargo.toml`
 ```toml
 [dependencies]
-telegraph-api-rs = "0.1.1"
+telegraph-api-rs = "0.1.2"
 ```
 
-And create account
-
+## Create account
 ```rust
 use telegraph_api_rs::{Telegraph, Request};
 
@@ -28,4 +27,21 @@ let account = telegraph.create_account()
 .unwrap();
 ```
 
+## Upload media files
+```rust
+use telegraph_api_rs::Telegraph;
+
+let telegraph = Telegraph::new();
+let files = vec!["1.jpg", "2.png"];
+let media = telegraph.upload(&files);
+```
+You can upload media with custom client
+```rust
+use telegraph_api_rs::Telegraph;
+use reqwest::blocking::Client;
+ 
+let client = Client::new();
+let files = vec!["1.jpg", "2.png"];
+let media = Telegraph::upload_with(&client, &files);
+```
 More examples in the [documentation](https://docs.rs/telegraph-api-rs)

@@ -398,7 +398,7 @@ impl Telegraph {
     /// # use telegraph_api_rs::Telegraph;
     /// let telegraph = Telegraph::new();
     /// let files = vec!["1.jpg", "2.png"];
-    /// let res = telegraph.upload(&files);
+    /// let media = telegraph.upload(&files);
     /// ```
     pub fn upload<T>(&self, files: &[T]) -> Result<Vec<Media>, TelegraphError> 
     where T: AsRef<Path>
@@ -416,7 +416,7 @@ impl Telegraph {
     /// 
     /// let files = vec!["1.jpg", "2.png"];
     /// let client = Client::new();
-    /// let res = Telegraph::upload_with(&client, &files);
+    /// let media = Telegraph::upload_with(&client, &files);
     /// ```
     pub fn upload_with<T>(client: &Client, files: &[T]) -> Result<Vec<Media>, TelegraphError> 
     where T: AsRef<Path>

@@ -21,6 +21,7 @@ pub use self::node::Node;
 pub use self::node_element::{NodeElement, NodeTag, NodeElementAttr};
 pub use self::page_list::PageList;
 pub use self::page_views::PageViews;
+#[cfg(feature = "upload")]
 pub use self::media::{UploadResult, Media};
 
 

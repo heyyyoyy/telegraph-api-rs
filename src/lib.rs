@@ -33,7 +33,9 @@ use std::fs::File;
 use std::io::Read;
 
 use reqwest::blocking::{Client, multipart};
-use types::{Node, UploadResult, Media};
+use types::Node;
+#[cfg(feature = "upload")]
+use types::{UploadResult, Media};
 
 use crate::requests::{
     RequestBuilder,

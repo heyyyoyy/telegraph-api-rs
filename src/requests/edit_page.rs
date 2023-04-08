@@ -6,18 +6,10 @@ use serde::Serialize;
 use crate::error::TelegraphError;
 use crate::requests::{
     ApiFieldSerializer, NoAccessToken, AccessToken,
-    NoTitle, Title, NoContent, Content
+    NoTitle, Title, NoContent, Content, NoPath, Path
 };
 use crate::types::{Node, Page, TelegraphResult};
 
-
-/// Path of the empty state type
-#[derive(Default)]
-pub struct NoPath;
-
-/// Path of the filled state type
-#[derive(Serialize)]
-pub struct Path(String);
 
 /// Builder of `editPage`
 #[derive(Default, Serialize)]

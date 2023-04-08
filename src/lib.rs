@@ -304,8 +304,8 @@ impl Telegraph {
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn get_page(&self) -> GetPage {
-        RequestBuilder::build::<GetPage>(
+    pub fn get_page(&self) -> GetPage<NoPath> {
+        GetPage::new(
             self.client.clone(), 
             self.method_name.get_page.clone()
         )

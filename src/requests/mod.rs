@@ -37,7 +37,7 @@ pub use get_account_info::GetAccountInfo;
 pub use revoke_access_token::RevokeAccessToken;
 
 pub use create_page::CreatePage;
-pub use edit_page::{EditPage, NoPath};
+pub use edit_page::EditPage;
 pub use get_page::GetPage;
 pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
@@ -69,6 +69,14 @@ pub struct NoContent;
 /// Title of the filled state type
 #[derive(Serialize)]
 pub struct Content(Vec<Node>);
+
+/// Path of the empty state type
+#[derive(Default)]
+pub struct NoPath;
+
+/// Path of the filled state type
+#[derive(Serialize)]
+pub struct Path(String);
 
 /// Trait for API methods. 
 pub trait Request 

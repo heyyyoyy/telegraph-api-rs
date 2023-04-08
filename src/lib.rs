@@ -126,8 +126,9 @@ impl Telegraph {
     /// # use telegraph_api_rs::{Telegraph, types::Account};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
+    /// # let token = account.access_token.as_ref().unwrap();
     /// let edited_account = telegraph.edit_account_info()
-    /// .access_token(&account.access_token.unwrap())
+    /// .access_token(token)
     /// .author_name("Author name 2")
     /// .send()
     /// .unwrap();
@@ -145,17 +146,18 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// # use telegraph_api_rs::{Telegraph, Request, types::{Account, AccountField}};
+    /// # use telegraph_api_rs::{Telegraph, types::{Account, AccountField}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
+    /// # let token = account.access_token.as_ref().unwrap();
     /// let account_info = telegraph.get_account_info()
-    /// .access_token(&account.access_token.unwrap())
+    /// .access_token(token)
     /// .fields(vec![AccountField::ShortName, AccountField::AuthorUrl])
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn get_account_info(&self) -> GetAccountInfo {
-        RequestBuilder::build::<GetAccountInfo>(
+    pub fn get_account_info(&self) -> GetAccountInfo<NoAccessToken> {
+        GetAccountInfo::new(
             self.client.clone(), 
             self.method_name.get_account_info.clone()
         )

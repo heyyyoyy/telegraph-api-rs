@@ -5,15 +5,7 @@ use serde::Serialize;
 
 use crate::types::{Account, TelegraphResult};
 use crate::error::TelegraphError;
-
-
-/// Access token of the empty state type
-#[derive(Default)]
-pub struct NoAccessToken;
-
-/// Access token of the filled state type
-#[derive(Serialize)]
-pub struct AccessToken(String);
+use crate::requests::{NoAccessToken, AccessToken};
 
 
 /// Builder of `editAccountInfo`

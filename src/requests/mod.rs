@@ -32,7 +32,7 @@ use serde::{Serialize, Serializer};
 use serde::ser;
 
 pub use create_account::{CreateAccount, ShortName, NoShortName};
-pub use edit_account_info::{EditAccountInfo, NoAccessToken, AccessToken};
+pub use edit_account_info::EditAccountInfo;
 pub use get_account_info::GetAccountInfo;
 pub use revoke_access_token::RevokeAccessToken;
 
@@ -45,6 +45,14 @@ pub use get_views::GetViews;
 use crate::error::TelegraphError;
 use crate::types::{TelegraphResult, TelegraphType};
 
+
+/// Access token of the empty state type
+#[derive(Default)]
+pub struct NoAccessToken;
+
+/// Access token of the filled state type
+#[derive(Serialize)]
+pub struct AccessToken(String);
 
 /// Trait for API methods. 
 pub trait Request 

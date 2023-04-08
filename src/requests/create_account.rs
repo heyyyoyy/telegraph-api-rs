@@ -33,7 +33,7 @@ pub struct CreateAccount<N> {
 
 impl CreateAccount<NoShortName> {
     pub(crate) fn new(client: Rc<Client>, method_name: Rc<String>) -> CreateAccount<NoShortName> {
-        CreateAccount {  client, method_name, ..Self::default() }
+        Self {  client, method_name, ..Self::default() }
     }
 }
 

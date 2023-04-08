@@ -174,13 +174,14 @@ impl Telegraph {
     /// # use telegraph_api_rs::{Telegraph, Request, types::{Account}};
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
+    /// # let token = account.access_token.as_ref().unwrap();
     /// let account = telegraph.revoke_access_token()
-    /// .access_token(&account.access_token.unwrap())
+    /// .access_token(token)
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn revoke_access_token(&self) -> RevokeAccessToken {
-        RequestBuilder::build::<RevokeAccessToken>(
+    pub fn revoke_access_token(&self) -> RevokeAccessToken<NoAccessToken> {
+        RevokeAccessToken::new(
             self.client.clone(), 
             self.method_name.revoke_access_token.clone()
         )

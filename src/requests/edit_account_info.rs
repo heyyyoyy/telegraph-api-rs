@@ -28,7 +28,7 @@ pub struct EditAccountInfo<T> {
 
 impl EditAccountInfo<NoAccessToken> {
     pub(crate) fn new(client: Rc<Client>, method_name: Rc<String>) -> EditAccountInfo<NoAccessToken> {
-        EditAccountInfo {  client, method_name, ..Self::default() }
+        Self {  client, method_name, ..Self::default() }
     }
 }
 

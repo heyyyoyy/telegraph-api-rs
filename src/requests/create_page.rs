@@ -4,21 +4,9 @@ use reqwest::blocking::Client;
 use serde::Serialize;
 
 use crate::error::TelegraphError;
-use crate::requests::{ApiFieldSerializer, NoAccessToken, AccessToken};
+use crate::requests::{ApiFieldSerializer, NoAccessToken, AccessToken, NoTitle, Title, NoContent, Content};
 use crate::types::{Node, Page, TelegraphResult};
 
-
-#[derive(Default)]
-pub struct NoTitle;
-
-#[derive(Serialize)]
-pub struct Title(String);
-
-#[derive(Default, Serialize)]
-pub struct NoContent;
-
-#[derive(Serialize)]
-pub struct Content(Vec<Node>);
 
 /// Builder of `createPage`
 #[derive(Default, Serialize)]

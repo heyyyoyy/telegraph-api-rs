@@ -36,14 +36,14 @@ pub use edit_account_info::EditAccountInfo;
 pub use get_account_info::GetAccountInfo;
 pub use revoke_access_token::RevokeAccessToken;
 
-pub use create_page::{CreatePage, NoTitle, NoContent};
-pub use edit_page::EditPage;
+pub use create_page::CreatePage;
+pub use edit_page::{EditPage, NoPath};
 pub use get_page::GetPage;
 pub use get_page_list::GetPageList;
 pub use get_views::GetViews;
 
 use crate::error::TelegraphError;
-use crate::types::{TelegraphResult, TelegraphType};
+use crate::types::{TelegraphResult, TelegraphType, Node};
 
 
 /// Access token of the empty state type
@@ -53,6 +53,22 @@ pub struct NoAccessToken;
 /// Access token of the filled state type
 #[derive(Serialize)]
 pub struct AccessToken(String);
+
+/// Title of the empty state type 
+#[derive(Default)]
+pub struct NoTitle;
+
+/// Title of the filled state type
+#[derive(Serialize)]
+pub struct Title(String);
+
+/// Title of the empty state type 
+#[derive(Default, Serialize)]
+pub struct NoContent;
+
+/// Title of the filled state type
+#[derive(Serialize)]
+pub struct Content(Vec<Node>);
 
 /// Trait for API methods. 
 pub trait Request 

@@ -42,7 +42,7 @@ use crate::requests::{
     CreateAccount, EditAccountInfo, GetAccountInfo, 
     CreatePage, RevokeAccessToken, EditPage, GetPage,
     GetPageList, GetViews, NoShortName, NoAccessToken,
-    NoTitle, NoContent
+    NoTitle, NoContent, NoPath
 };
 pub use crate::requests::Request;
 pub use crate::error::TelegraphError;
@@ -245,6 +245,7 @@ impl Telegraph {
     /// # let telegraph = Telegraph::new();
     /// # let account = Account::default();
     /// # let page = Page::default();
+    /// # let token = account.access_token.as_ref().unwrap();
     /// let new_content = r#"
     /// [
     ///    {
@@ -274,7 +275,7 @@ impl Telegraph {
     /// let new_cont = build_content(new_content).unwrap();
     ///
     /// let edited_page = telegraph.edit_page()
-    /// .access_token(&account.access_token.unwrap())
+    /// .access_token(token)
     /// .title(&page.title)
     /// .path(&page.path)
     /// .content(new_cont)
@@ -282,8 +283,8 @@ impl Telegraph {
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn edit_page(&self) -> EditPage {
-        RequestBuilder::build::<EditPage>(
+    pub fn edit_page(&self) -> EditPage<NoAccessToken, NoPath, NoTitle, NoContent> {
+        EditPage::new(
             self.client.clone(), 
             self.method_name.edit_page.clone()
         )

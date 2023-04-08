@@ -26,7 +26,7 @@ mod get_page;
 mod get_page_list;
 mod get_views;
 
-use std::sync::Arc;
+use std::rc::Rc;
 use reqwest::blocking::Client;
 use serde::{Serialize, Serializer};
 use serde::ser;
@@ -56,7 +56,7 @@ where <Self as Request>::Response: TelegraphType
     type Response;
 
     /// Struct onstructor
-    fn new (client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder;
+    fn new (client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder;
     /// Sending request to API
     fn send(&self) -> Result<Self::Response, TelegraphError>;
     /// Error handling
@@ -92,7 +92,7 @@ pub struct RequestBuilder;
 
 impl RequestBuilder {
     /// Call constructor of `T` struct
-    pub fn build<T> (client: Arc<Client>, method_name: Arc<String>) -> T
+    pub fn build<T> (client: Rc<Client>, method_name: Rc<String>) -> T
     where T: Request + Request<MethodBuilder = T>
     {
         T::new(client, method_name)

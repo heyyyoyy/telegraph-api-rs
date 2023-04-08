@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use reqwest::blocking::Client;
 use serde::Serialize;
@@ -13,9 +13,9 @@ use crate::requests::{Request, ApiFieldSerializer};
 #[derive(Serialize)]
 pub struct GetAccountInfo {
     #[serde(skip)]
-    client: Arc<Client>,
+    client: Rc<Client>,
     #[serde(skip)]
-    method_name: Arc<String>,
+    method_name: Rc<String>,
 
     access_token: String,
     #[serde(serialize_with = "ApiFieldSerializer::serialize")]
@@ -27,7 +27,7 @@ impl Request for GetAccountInfo {
     type MethodBuilder = GetAccountInfo;
     type Response = Account;
 
-    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { 
             client, 
             method_name, 

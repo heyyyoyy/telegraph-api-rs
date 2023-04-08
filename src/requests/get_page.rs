@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use reqwest::blocking::Client;
 use serde::Serialize;
@@ -12,9 +12,9 @@ use crate::requests::Request;
 #[derive(Default, Serialize)]
 pub struct GetPage {
     #[serde(skip)]
-    client: Arc<Client>,
+    client: Rc<Client>,
     #[serde(skip)]
-    method_name: Arc<String>,
+    method_name: Rc<String>,
 
     path: String,
     return_content: bool
@@ -24,7 +24,7 @@ impl Request for GetPage {
     type MethodBuilder = GetPage;
     type Response = Page;
 
-    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
     fn send(&self) -> Result<Self::Response, TelegraphError> {

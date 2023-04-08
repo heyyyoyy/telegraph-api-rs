@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use reqwest::blocking::Client;
 use serde::Serialize;
@@ -12,9 +12,9 @@ use crate::error::TelegraphError;
 #[derive(Default, Serialize)]
 pub struct GetViews {
     #[serde(skip)]
-    client: Arc<Client>,
+    client: Rc<Client>,
     #[serde(skip)]
-    method_name: Arc<String>,
+    method_name: Rc<String>,
 
     path: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -31,7 +31,7 @@ impl Request for GetViews {
     type MethodBuilder = GetViews;
     type Response = PageViews;
 
-    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { 
             client, 
             method_name,

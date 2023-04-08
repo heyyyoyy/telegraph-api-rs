@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use reqwest::blocking::Client;
 use serde::Serialize;
@@ -12,9 +12,9 @@ use crate::error::TelegraphError;
 #[derive(Serialize)]
 pub struct GetPageList {
     #[serde(skip)]
-    client: Arc<Client>,
+    client: Rc<Client>,
     #[serde(skip)]
-    method_name: Arc<String>,
+    method_name: Rc<String>,
 
     access_token: String,
     offset: i32,
@@ -25,7 +25,7 @@ impl Request for GetPageList {
     type MethodBuilder = GetPageList;
     type Response = PageList;
 
-    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { 
             client, 
             method_name, 

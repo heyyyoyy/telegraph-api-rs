@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use reqwest::blocking::Client;
 use serde::Serialize;
@@ -12,9 +12,9 @@ use crate::requests::Request;
 #[derive(Default, Serialize)]
 pub struct CreateAccount {
     #[serde(skip)]
-    client: Arc<Client>,
+    client: Rc<Client>,
     #[serde(skip)]
-    method_name: Arc<String>,
+    method_name: Rc<String>,
 
     short_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -28,7 +28,7 @@ impl Request for CreateAccount {
     type MethodBuilder = CreateAccount;
     type Response = Account;
 
-    fn new(client: Arc<Client>, method_name: Arc<String>) -> Self::MethodBuilder {
+    fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
         Self::MethodBuilder { client, method_name, ..Self::default() }
     }
     fn send(&self) -> Result<Self::Response, TelegraphError> {

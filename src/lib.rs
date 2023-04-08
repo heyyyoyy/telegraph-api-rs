@@ -326,8 +326,8 @@ impl Telegraph {
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn get_page_list(&self) -> GetPageList {
-        RequestBuilder::build::<GetPageList>(
+    pub fn get_page_list(&self) -> GetPageList<NoAccessToken> {
+        GetPageList::new(
             self.client.clone(), 
             self.method_name.get_page_list.clone()
         )

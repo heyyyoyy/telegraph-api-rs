@@ -31,7 +31,7 @@ use reqwest::blocking::Client;
 use serde::{Serialize, Serializer};
 use serde::ser;
 
-pub use create_account::CreateAccount;
+pub use create_account::{CreateAccount, ShortName, NoShortName};
 pub use edit_account_info::EditAccountInfo;
 pub use get_account_info::GetAccountInfo;
 pub use revoke_access_token::RevokeAccessToken;

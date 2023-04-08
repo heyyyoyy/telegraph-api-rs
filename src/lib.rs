@@ -5,7 +5,7 @@
 //! # Quick start
 //! 
 //! ```rust, no_run
-//! use telegraph_api_rs::{Telegraph, Request};
+//! use telegraph_api_rs::Telegraph;
 //! 
 //! let telegraph = Telegraph::new();
 //! let account = telegraph.create_account()
@@ -41,7 +41,7 @@ use crate::requests::{
     RequestBuilder,
     CreateAccount, EditAccountInfo, GetAccountInfo, 
     CreatePage, RevokeAccessToken, EditPage, GetPage,
-    GetPageList, GetViews
+    GetPageList, GetViews, NoShortName
 };
 pub use crate::requests::Request;
 pub use crate::error::TelegraphError;
@@ -100,7 +100,7 @@ impl Telegraph {
     /// 
     /// # Example
     /// ```rust, no_run
-    /// use telegraph_api_rs::{Telegraph, Request};
+    /// use telegraph_api_rs::Telegraph;
     ///
     /// let telegraph = Telegraph::new();
     /// let account = telegraph.create_account()
@@ -109,8 +109,8 @@ impl Telegraph {
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn create_account(&self) -> CreateAccount {
-        RequestBuilder::build::<CreateAccount>(
+    pub fn create_account(&self) -> CreateAccount<NoShortName> {
+        CreateAccount::new(
             self.client.clone(), 
             self.method_name.create_account.clone()
         )

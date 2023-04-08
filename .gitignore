@@ -2,3 +2,4 @@
 /Cargo.lock
 /.vscode
 src/main.rs
+.DS_Store

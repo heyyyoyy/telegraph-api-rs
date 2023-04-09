@@ -38,7 +38,6 @@ use types::Node;
 use types::{UploadResult, Media};
 
 use crate::requests::{
-    RequestBuilder,
     CreateAccount, EditAccountInfo, GetAccountInfo, 
     CreatePage, RevokeAccessToken, EditPage, GetPage,
     GetPageList, GetViews, NoShortName, NoAccessToken,
@@ -350,8 +349,8 @@ impl Telegraph {
     /// .send()
     /// .unwrap();
     /// ```
-    pub fn get_views(&self) -> GetViews {
-        RequestBuilder::build::<GetViews>(
+    pub fn get_views(&self) -> GetViews<NoPath> {
+        GetViews::new(
             self.client.clone(), 
             self.method_name.get_views.clone()
         )

@@ -3,7 +3,7 @@
 ![Crates.io](https://img.shields.io/crates/v/telegraph-api-rs?style=plastic)
 ![Crates.io](https://img.shields.io/crates/l/telegraph-api-rs?style=plastic)
 [![CI](https://github.com/heyyyoyy/telegraph-api-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/heyyyoyy/telegraph-api-rs/actions/workflows/rust.yml)
-![docs.rs](https://img.shields.io/docsrs/telegraph-api-rs?style=plastic)
+[![docs.rs](https://img.shields.io/docsrs/telegraph-api-rs?style=plastic)](https://docs.rs/telegraph-api-rs/0.2.0/telegraph_api_rs/)
 
 Rust implementation of [Telegraph API](https://telegra.ph/api)
 

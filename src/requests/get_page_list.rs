@@ -21,25 +21,6 @@ pub struct GetPageList<T> {
     limit: i32
 }
 
-// impl Request for GetPageList {
-//     type MethodBuilder = GetPageList;
-//     type Response = PageList;
-
-//     fn new(client: Rc<Client>, method_name: Rc<String>) -> Self::MethodBuilder {
-//         Self::MethodBuilder { 
-//             client, 
-//             method_name, 
-//             access_token: "".to_string(),
-//             offset: 0,
-//             limit: 50 
-//         }
-//     }
-//     fn send(&self) -> Result<Self::Response, TelegraphError> {
-//         let req = self.client.post(self.method_name.as_str()).form(&self).send()?;
-//         let json: TelegraphResult<Self::Response> = req.json()?;
-//         Self::MethodBuilder::catch_api_error(json)
-//     }
-// }
 impl GetPageList<NoAccessToken> {
     pub(crate) fn new(client: Rc<Client>, method_name: Rc<String>) -> GetPageList<NoAccessToken> {
         Self { 

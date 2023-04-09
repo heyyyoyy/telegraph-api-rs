@@ -155,8 +155,9 @@
 //! # use telegraph_api_rs::{Telegraph, types::Account};
 //! # let telegraph = Telegraph::new();
 //! # let account = Account::default();
+//! # let token = account.access_token.as_ref().unwrap();
 //! let page_list = telegraph.get_page_list()
-//! .access_token(&account.access_token.unwrap())
+//! .access_token(token)
 //! .limit(2)
 //! .send()
 //! .unwrap();

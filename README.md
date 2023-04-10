@@ -17,7 +17,7 @@ telegraph-api-rs = "0.2.0"
 
 ## Create account
 ```rust
-use telegraph_api_rs::{Telegraph, Request};
+use telegraph_api_rs::Telegraph;
 
 let telegraph = Telegraph::new();
 let account = telegraph.create_account()
